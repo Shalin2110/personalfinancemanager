@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.controller.ReportController">
+
+    <top>
+        <Label text="Financial Reports" style="-fx-font-size: 20; -fx-padding: 10;" />
+    </top>
+
+    <center>
+        <VBox spacing="15" alignment="CENTER" style="-fx-padding: 20;">
+            <Button text="Generate Budget Adherence Report" onAction="#generateBudgetReport" prefWidth="300"/>
+            <Button text="Generate Savings Goal Progress Report" onAction="#generateSavingsReport" prefWidth="300"/>
+        </VBox>
+    </center>
+</BorderPane>

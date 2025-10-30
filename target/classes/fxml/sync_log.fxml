@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.controller.SyncLogController">
+
+    <top>
+        <Label text="Synchronization Logs" style="-fx-font-size: 20; -fx-padding: 10;" />
+    </top>
+
+    <center>
+        <VBox spacing="10" style="-fx-padding: 10;">
+            <Button text="Refresh Logs" onAction="#loadLogs" />
+            <TableView fx:id="tblLogs" prefHeight="400">
+                <columns>
+                    <TableColumn fx:id="colId" text="ID" prefWidth="60"/>
+                    <TableColumn fx:id="colTxn" text="Device Txn ID" prefWidth="220"/>
+                    <TableColumn fx:id="colTable" text="Table" prefWidth="120"/>
+                    <TableColumn fx:id="colStatus" text="Status" prefWidth="100"/>
+                    <TableColumn fx:id="colTime" text="Last Attempt" prefWidth="180"/>
+                    <TableColumn fx:id="colRetries" text="Retries" prefWidth="80"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </center>
+
+</BorderPane>

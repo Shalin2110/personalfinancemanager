@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.controller.SavingsGoalController">
+
+    <top>
+        <Label text="Savings Goal Management" style="-fx-font-size: 20; -fx-padding: 10;" />
+    </top>
+
+    <center>
+        <VBox spacing="8" alignment="CENTER" style="-fx-padding: 10;">
+            <HBox spacing="8">
+                <Label text="Goal Name:"/>
+                <TextField fx:id="txtName"/>
+                <Label text="Target:"/>
+                <TextField fx:id="txtTarget"/>
+            </HBox>
+            <HBox spacing="8">
+                <Label text="Current:"/>
+                <TextField fx:id="txtCurrent"/>
+                <Label text="Start:"/>
+                <DatePicker fx:id="dpStart"/>
+                <Label text="End:"/>
+                <DatePicker fx:id="dpEnd"/>
+            </HBox>
+            <HBox spacing="10">
+                <Button text="Add" onAction="#addGoal"/>
+                <Button text="Update" onAction="#updateGoal"/>
+                <Button text="Delete" onAction="#deleteGoal"/>
+                <Button text="Refresh" onAction="#loadGoals"/>
+            </HBox>
+            <TableView fx:id="tblGoals" prefHeight="300" prefWidth="700">
+                <columns>
+                    <TableColumn fx:id="colId" text="ID" prefWidth="40"/>
+                    <TableColumn fx:id="colName" text="Name" prefWidth="120"/>
+                    <TableColumn fx:id="colTarget" text="Target" prefWidth="100"/>
+                    <TableColumn fx:id="colCurrent" text="Current" prefWidth="100"/>
+                    <TableColumn fx:id="colProgress" text="Progress %" prefWidth="100"/>
+                    <TableColumn fx:id="colStatus" text="Status" prefWidth="100"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </center>
+
+</BorderPane>

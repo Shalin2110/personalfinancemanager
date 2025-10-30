@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.controller.BudgetController">
+
+    <top>
+        <Label text="Budget Management" style="-fx-font-size: 20; -fx-padding: 10;" />
+    </top>
+
+    <center>
+        <VBox spacing="8" alignment="CENTER" style="-fx-padding: 10;">
+            <HBox spacing="8">
+                <Label text="Category ID:"/>
+                <TextField fx:id="txtCategoryId"/>
+                <Label text="Amount:"/>
+                <TextField fx:id="txtAmount"/>
+            </HBox>
+            <HBox spacing="8">
+                <Label text="Start Date:"/>
+                <DatePicker fx:id="dpStart"/>
+                <Label text="End Date:"/>
+                <DatePicker fx:id="dpEnd"/>
+            </HBox>
+            <HBox spacing="10">
+                <Button text="Add" onAction="#addBudget"/>
+                <Button text="Update" onAction="#updateBudget"/>
+                <Button text="Delete" onAction="#deleteBudget"/>
+                <Button text="Refresh" onAction="#loadBudgets"/>
+            </HBox>
+            <TableView fx:id="tblBudget" prefHeight="300" prefWidth="600">
+                <columns>
+                    <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
+                    <TableColumn fx:id="colCategory" text="Category" prefWidth="120"/>
+                    <TableColumn fx:id="colAmount" text="Amount" prefWidth="100"/>
+                    <TableColumn fx:id="colStart" text="Start Date" prefWidth="120"/>
+                    <TableColumn fx:id="colEnd" text="End Date" prefWidth="120"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </center>
+
+</BorderPane>
