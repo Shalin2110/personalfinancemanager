@@ -3,6 +3,7 @@ package com.example.model;
 import java.time.LocalDate;
 
 public class Budget {
+    private int userId;
     private int budgetId;
     private int categoryId;
     private double amount;
@@ -15,13 +16,22 @@ public class Budget {
 
     public Budget() {}
 
-    public Budget(int budgetId, int categoryId, double amount, LocalDate startDate, LocalDate endDate, boolean deleteFlag) {
+    public Budget(int userId, int budgetId, int categoryId, double amount, LocalDate startDate, LocalDate endDate, boolean deleteFlag) {
+        this.userId = userId;
         this.budgetId = budgetId;
         this.categoryId = categoryId;
         this.amount = amount;
         this.startDate = startDate;
         this.endDate = endDate;
         this.deleteFlag = deleteFlag;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public int getBudgetId() {

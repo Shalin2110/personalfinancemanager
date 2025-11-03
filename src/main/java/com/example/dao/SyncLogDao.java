@@ -10,8 +10,10 @@ import java.util.List;
 
 public class SyncLogDao {
 
+    // Insert new log
     public void addSyncLog(SyncLog log) throws SQLException {
-        String sql = "INSERT INTO sync_log (device_txn_id, table_name, status, last_attempt, retries) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO sync_log (device_txn_id, table_name, status, last_attempt, retries) " +
+                "VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = SQLiteConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, log.getDeviceTxnId());
@@ -23,16 +25,30 @@ public class SyncLogDao {
         }
     }
 
-    public void updateStatus(String deviceTxnId, String status) throws SQLException {
-        String sql = "UPDATE sync_log SET status = ?, last_attempt = CURRENT_TIMESTAMP, retries = retries + 1 WHERE device_txn_id = ?";
+    // Update status only
+    public void updateStatus(String deviceTxnId, String status, LocalDateTime lastAttempt) throws SQLException {
+        String sql = "UPDATE sync_log SET status = ?, last_attempt = ? WHERE device_txn_id = ?";
         try (Connection conn = SQLiteConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, status);
-            ps.setString(2, deviceTxnId);
+            ps.setString(2, lastAttempt.toString());
+            ps.setString(3, deviceTxnId);
             ps.executeUpdate();
         }
     }
 
+    // Increment retry count
+    public void incrementRetries(String deviceTxnId) throws SQLException {
+        String sql = "UPDATE sync_log SET retries = retries + 1, last_attempt = CURRENT_TIMESTAMP " +
+                "WHERE device_txn_id = ?";
+        try (Connection conn = SQLiteConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, deviceTxnId);
+            ps.executeUpdate();
+        }
+    }
+
+    // Retrieve all logs
     public List<SyncLog> getAllLogs() throws SQLException {
         List<SyncLog> logs = new ArrayList<>();
         String sql = "SELECT * FROM sync_log ORDER BY last_attempt DESC";
@@ -46,7 +62,10 @@ public class SyncLogDao {
                 log.setDeviceTxnId(rs.getString("device_txn_id"));
                 log.setTableName(rs.getString("table_name"));
                 log.setStatus(rs.getString("status"));
-                log.setLastAttempt(LocalDateTime.parse(rs.getString("last_attempt")));
+
+                Timestamp ts = rs.getTimestamp("last_attempt");
+                log.setLastAttempt(ts != null ? ts.toLocalDateTime() : null);
+
                 log.setRetries(rs.getInt("retries"));
                 logs.add(log);
             }

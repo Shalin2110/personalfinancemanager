@@ -10,24 +10,28 @@ public class SyncManager {
 
     private static final SyncLogService logService = new SyncLogService();
 
-    public static String startSync(String tableName) {
-        String txnId = UUID.randomUUID().toString();
+    public static String startSync(String tableName, String existingTxnId) {
+        String txnId = (existingTxnId != null) ? existingTxnId : UUID.randomUUID().toString();
+
         SyncLog log = new SyncLog();
         log.setDeviceTxnId(txnId);
         log.setTableName(tableName);
         log.setStatus("PENDING");
         log.setLastAttempt(LocalDateTime.now());
         log.setRetries(0);
-        logService.recordNewSync(tableName);
+
+        logService.recordNewSync(log);
         return txnId;
     }
 
     public static void markSuccess(String txnId) {
         logService.updateSyncStatus(txnId, "SUCCESS");
+        System.out.println("[SyncManager] Sync successful for " + txnId);
     }
 
     public static void markFailure(String txnId, String error) {
+        logService.incrementRetryCount(txnId);
         logService.updateSyncStatus(txnId, "FAILED");
-        System.err.println("[SyncManager] Sync failed: " + error);
+        System.err.println("[SyncManager] Sync failed for " + txnId + ": " + error);
     }
 }

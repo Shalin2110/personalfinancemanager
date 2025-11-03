@@ -1,0 +1,1 @@
+ALTER TABLE expense RENAME date TO expense_date;
