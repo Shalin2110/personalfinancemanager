@@ -175,7 +175,7 @@ public class ExpenseDao {
     }
 
     // Sync to Oracle (MERGE logic)
-    private void syncToOracle(Expense expense) throws SQLException {
+    public void syncToOracle(Expense expense) throws SQLException {
         String sql = """
             MERGE INTO expense_central t
             USING (

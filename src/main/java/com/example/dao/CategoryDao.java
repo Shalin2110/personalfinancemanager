@@ -101,7 +101,7 @@ public class CategoryDao {
     }
 
     // Sync logic for Oracle
-    private void syncToOracle(Category category) throws SQLException {
+    public void syncToOracle(Category category) throws SQLException {
         String sql = """
             MERGE INTO category_central t
             USING (SELECT ? AS category_id, ? AS user_id, ? AS name, ? AS type, ? AS parent_category_id, ? AS delete_flag FROM dual) s
