@@ -3,6 +3,7 @@ package com.example.model;
 import java.time.LocalDate;
 
 public class SavingsGoal {
+    private int userId;
     private int goalId;
     private String name;
     private double targetAmount;
@@ -13,8 +14,9 @@ public class SavingsGoal {
 
     public SavingsGoal() {}
 
-    public SavingsGoal(int goalId, String name, double targetAmount, double currentAmount,
+    public SavingsGoal(int userId, int goalId, String name, double targetAmount, double currentAmount,
                        LocalDate startDate, LocalDate endDate, boolean deleteFlag) {
+        this.userId = userId;
         this.goalId = goalId;
         this.name = name;
         this.targetAmount = targetAmount;
@@ -22,6 +24,14 @@ public class SavingsGoal {
         this.startDate = startDate;
         this.endDate = endDate;
         this.deleteFlag = deleteFlag;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public int getGoalId() { return goalId; }
