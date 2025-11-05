@@ -1,16 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.layout.*?>
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.controller.ReportController">
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.controller.ReportController">
 
     <top>
-        <Label text="Financial Reports" style="-fx-font-size: 20; -fx-padding: 10;" />
+        <Label text="Financial Reports"
+               style="-fx-font-size: 20; -fx-font-weight: bold; -fx-padding: 15;"
+               BorderPane.alignment="CENTER"/>
     </top>
 
     <center>
-        <VBox spacing="15" alignment="CENTER" style="-fx-padding: 20;">
-            <Button text="Generate Budget Adherence Report" onAction="#generateBudgetReport" prefWidth="300"/>
-            <Button text="Generate Savings Goal Progress Report" onAction="#generateSavingsReport" prefWidth="300"/>
+        <VBox spacing="20" alignment="CENTER" style="-fx-padding: 25;">
+
+            <!-- Monthly Expenditure -->
+            <VBox alignment="CENTER" spacing="6">
+                <Button text="Monthly Expenditure Analysis"
+                        onAction="#handleMonthlyExpenditureReport"
+                        prefWidth="320"/>
+                <Button text="Save as PDF"
+                        onAction="#handleSaveMonthlyExpenditurePDF"
+                        prefWidth="200"/>
+            </VBox>
+
+            <!-- Budget Adherence -->
+            <VBox alignment="CENTER" spacing="6">
+                <Button text="Budget Adherence Report"
+                        onAction="#handleBudgetAdherenceReport"
+                        prefWidth="320"/>
+                <Button text="Save as PDF"
+                        onAction="#handleSaveBudgetAdherencePDF"
+                        prefWidth="200"/>
+            </VBox>
+
+            <!-- Savings Goal Progress -->
+            <VBox alignment="CENTER" spacing="6">
+                <Button text="Savings Goal Progress"
+                        onAction="#handleSavingsGoalProgressReport"
+                        prefWidth="320"/>
+                <Button text="Save as PDF"
+                        onAction="#handleSaveSavingsGoalProgressPDF"
+                        prefWidth="200"/>
+            </VBox>
+
+            <!-- Category Expense Distribution -->
+            <VBox alignment="CENTER" spacing="6">
+                <Button text="Category-wise Expense Distribution"
+                        onAction="#handleCategoryExpenseDistributionReport"
+                        prefWidth="320"/>
+                <Button text="Save as PDF"
+                        onAction="#handleSaveCategoryExpenseDistributionPDF"
+                        prefWidth="200"/>
+            </VBox>
+
+            <!-- Forecasted Savings Trends -->
+            <VBox alignment="CENTER" spacing="6">
+                <Button text="Forecasted Saving Trends"
+                        onAction="#handleForecastSavingsReport"
+                        prefWidth="320"/>
+                <Button text="Save as PDF"
+                        onAction="#handleSaveForecastSavingsPDF"
+                        prefWidth="200"/>
+            </VBox>
+
         </VBox>
     </center>
+
 </BorderPane>
