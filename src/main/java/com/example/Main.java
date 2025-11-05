@@ -12,7 +12,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         testDatabaseConnections();
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/fxml/budget.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/fxml/reports.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         primaryStage.setTitle("Personal Finance Manager");
         primaryStage.setScene(scene);

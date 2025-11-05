@@ -119,43 +119,20 @@ public class BudgetDao {
 
     // Oracle Sync Logic
     private void syncToOracle(Budget budget) throws SQLException {
-        String sql;
-        boolean isDelete = budget.isDeleteFlag();
-
-        if (isDelete) {
-            sql = "UPDATE budget_central SET delete_flag = 1 WHERE budget_id = ?";
-            try (Connection conn = OracleConnection.getConnection();
-                 PreparedStatement ps = conn.prepareStatement(sql)) {
-                ps.setInt(1, budget.getBudgetId());
-                ps.executeUpdate();
-            }
-            return;
-        }
-
-        sql = """
-        MERGE INTO budget_central t
-        USING (SELECT ? AS budget_id, ? AS user_id, ? AS category_id, ? AS amount, 
-                      ? AS start_date, ? AS end_date, ? AS delete_flag FROM dual) s
-        ON (t.budget_id = s.budget_id)
-        WHEN MATCHED THEN
-            UPDATE SET t.user_id=s.user_id, t.category_id=s.category_id, t.amount=s.amount, 
-                       t.start_date=s.start_date, t.end_date=s.end_date, t.delete_flag=s.delete_flag
-        WHEN NOT MATCHED THEN
-            INSERT (budget_id, user_id, category_id, amount, start_date, end_date, delete_flag)
-            VALUES (s.budget_id, s.user_id, s.category_id, s.amount, s.start_date, s.end_date, s.delete_flag)
-    """;
-
+        // Use stored procedure for insert/update
+        String sql = "{ call proc_sync_budget(?, ?, ?, ?, ?, ?, ?) }";
         try (Connection conn = OracleConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+             CallableStatement cs = conn.prepareCall(sql)) {
 
-            ps.setInt(1, budget.getBudgetId());
-            ps.setInt(2, budget.getUserId());
-            ps.setInt(3, budget.getCategoryId());
-            ps.setDouble(4, budget.getAmount());
-            ps.setDate(5, budget.getStartDate() != null ? Date.valueOf(budget.getStartDate()) : null);
-            ps.setDate(6, budget.getEndDate() != null ? Date.valueOf(budget.getEndDate()) : null);
-            ps.setInt(7, 0); // delete_flag = 0 for normal updates
-            ps.executeUpdate();
+            cs.setInt(1, budget.getBudgetId());
+            cs.setInt(2, budget.getUserId());
+            cs.setInt(3, budget.getCategoryId());
+            cs.setDouble(4, budget.getAmount());
+            cs.setDate(5, budget.getStartDate() != null ? Date.valueOf(budget.getStartDate()) : null);
+            cs.setDate(6, budget.getEndDate() != null ? Date.valueOf(budget.getEndDate()) : null);
+            cs.setInt(7, budget.isDeleteFlag() ? 1 : 0);
+
+            cs.execute();
         }
     }
 }

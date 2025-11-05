@@ -1,9 +1,9 @@
 package com.example.controller;
 
-import com.example.service.ReportService;
 import com.example.db.OracleConnection;
+import com.example.service.ReportService;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
+import net.sf.jasperreports.engine.JRException;
 
 import java.sql.Connection;
 
@@ -12,28 +12,67 @@ public class ReportController {
     private final ReportService reportService = new ReportService();
 
     @FXML
-    public void generateBudgetReport() {
-        try (Connection conn = OracleConnection.getConnection()) {
-            reportService.generateBudgetAdherenceReport(conn);
-        } catch (Exception e) {
-            showError("Failed to generate Budget report: " + e.getMessage());
-        }
+    private void handleMonthlyExpenditureReport() {
+        run(conn -> reportService.showMonthlyExpenditureReport(conn));
     }
 
     @FXML
-    public void generateSavingsReport() {
+    private void handleBudgetAdherenceReport() {
+        run(conn -> reportService.showBudgetAdherenceReport(conn));
+    }
+
+    @FXML
+    private void handleSavingsGoalProgressReport() {
+        run(conn -> reportService.showSavingsGoalProgressReport(conn));
+    }
+
+    @FXML
+    private void handleCategoryExpenseDistributionReport() {
+        run(conn -> reportService.showCategoryExpenseDistributionReport(conn));
+    }
+
+    @FXML
+    private void handleForecastSavingsReport() {
+        run(conn -> reportService.showForecastSavingsReport(conn));
+    }
+
+    @FXML
+    private void handleSaveMonthlyExpenditurePDF() {
+        run(conn -> reportService.saveMonthlyExpenditureReport(conn));
+    }
+
+    @FXML
+    private void handleSaveBudgetAdherencePDF() {
+        run(conn -> reportService.saveBudgetAdherenceReport(conn));
+    }
+
+    @FXML
+    private void handleSaveSavingsGoalProgressPDF() {
+        run(conn -> reportService.saveSavingsGoalProgressReport(conn));
+    }
+
+    @FXML
+    private void handleSaveCategoryExpenseDistributionPDF() {
+        run(conn -> reportService.saveCategoryExpenseDistributionReport(conn));
+    }
+
+    @FXML
+    private void handleSaveForecastSavingsPDF() {
+        run(conn -> reportService.saveForecastSavingsReport(conn));
+    }
+
+    private void run(ReportAction action) {
         try (Connection conn = OracleConnection.getConnection()) {
-            reportService.generateSavingsProgressReport(conn);
+            action.execute(conn);
+        } catch (JRException e) {
+            System.err.println("❌ Jasper Error: " + e.getMessage());
         } catch (Exception e) {
-            showError("Failed to generate Savings report: " + e.getMessage());
+            System.err.println("❌ Report Error: " + e.getMessage());
         }
     }
 
-    private void showError(String msg) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Report Error");
-        alert.setHeaderText(null);
-        alert.setContentText(msg);
-        alert.showAndWait();
+    @FunctionalInterface
+    interface ReportAction {
+        void execute(Connection conn) throws JRException;
     }
 }

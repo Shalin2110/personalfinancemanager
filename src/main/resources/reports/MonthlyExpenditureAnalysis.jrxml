@@ -1,0 +1,104 @@
+<!-- Created with Jaspersoft Studio version 7.0.3.final using JasperReports Library version 7.0.3-41034ca841d452f3305ba55b9042260aaa1ab5dd  -->
+<jasperReport name="MonthlyExpenditureAnalysis" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7a360b62-2156-4bb1-b1a4-964a1e8020db">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Oracle_Central"/>
+	<query language="SQL"><![CDATA[SELECT month_label,
+       category_name,
+       total_spent,
+       month_start
+FROM (
+    SELECT 
+        TRUNC(e.expense_date, 'MM') AS month_start,
+        TRIM(TO_CHAR(e.expense_date, 'Month YYYY')) AS month_label,
+        c.name AS category_name,
+        SUM(e.amount) AS total_spent
+    FROM expense_central e
+    JOIN category_central c ON e.category_id = c.category_id
+    WHERE e.delete_flag = 0
+    GROUP BY TRUNC(e.expense_date, 'MM'),
+             TRIM(TO_CHAR(e.expense_date, 'Month YYYY')),
+             c.name
+)
+ORDER BY month_start
+]]></query>
+	<field name="MONTH_LABEL" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="MONTH_LABEL"/>
+		<property name="com.jaspersoft.studio.field.label" value="MONTH_LABEL"/>
+	</field>
+	<field name="CATEGORY_NAME" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="CATEGORY_NAME"/>
+		<property name="com.jaspersoft.studio.field.label" value="CATEGORY_NAME"/>
+	</field>
+	<field name="TOTAL_SPENT" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="TOTAL_SPENT"/>
+		<property name="com.jaspersoft.studio.field.label" value="TOTAL_SPENT"/>
+	</field>
+	<field name="MONTH_START" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="MONTH_START"/>
+		<property name="com.jaspersoft.studio.field.label" value="MONTH_START"/>
+	</field>
+	<background splitType="Stretch"/>
+	<title height="79" splitType="Stretch">
+		<element kind="rectangle" uuid="cb0d765d-5588-4ae8-badc-2731a9b6dae8" mode="Transparent" x="0" y="4" width="550" height="71"/>
+		<element kind="staticText" uuid="9fe9370d-1b5e-432f-926d-f3a5e1363531" x="80" y="10" width="400" height="60" fontSize="24.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Monthly Expenditure Analysis Report]]></text>
+		</element>
+	</title>
+	<pageHeader height="45" splitType="Stretch">
+		<element kind="staticText" uuid="92c8c46b-3f84-49d3-ac11-47b9f36fdaf7" x="10" y="16" width="30" height="15" bold="true">
+			<text><![CDATA[Date:]]></text>
+		</element>
+		<element kind="textField" uuid="1dcaa03e-bcba-4d07-a3de-52547fd8f3ff" x="40" y="16" width="100" height="13" pattern="MMMMM dd, yyyy">
+			<expression><![CDATA[new java.util.Date()]]></expression>
+		</element>
+	</pageHeader>
+	<columnHeader height="61" splitType="Stretch">
+		<element kind="rectangle" uuid="33776629-fb0b-496a-b8a2-cf2b7c0bc256" mode="Transparent" x="0" y="6" width="550" height="51"/>
+		<element kind="staticText" uuid="f77f77ed-0004-4b77-8abb-6d864cf599e4" x="10" y="15" width="175" height="30" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Expenditure Month]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ebfc3f01-23d4-4ac8-9934-799d1ea0a287"/>
+		</element>
+		<element kind="staticText" uuid="23923af5-08fb-4319-bc31-5b52bd487d93" x="185" y="15" width="185" height="30" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Category Spent On]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="eada5e93-d4fe-45d8-8b42-bca743939fe7"/>
+		</element>
+		<element kind="staticText" uuid="bdce38d3-ffa7-43fd-b9e0-8215f04f32ab" x="370" y="15" width="175" height="30" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Total Amount Spent]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="c3a7b9b9-d7ae-4715-b47c-a380031c1bcb"/>
+		</element>
+	</columnHeader>
+	<detail>
+		<band height="50" splitType="Stretch">
+			<element kind="textField" uuid="79fd14ad-7200-4f98-aafc-3d3539c7a0b1" x="10" y="10" width="175" height="30" hTextAlign="Center">
+				<expression><![CDATA[$F{MONTH_LABEL}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ebfc3f01-23d4-4ac8-9934-799d1ea0a287"/>
+			</element>
+			<element kind="textField" uuid="18cf8427-1265-4581-901f-3295267c5de8" x="185" y="10" width="185" height="30" hTextAlign="Center">
+				<expression><![CDATA[$F{CATEGORY_NAME}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="eada5e93-d4fe-45d8-8b42-bca743939fe7"/>
+			</element>
+			<element kind="textField" uuid="f903c583-3726-46fd-8d3a-4267de15eb6e" x="370" y="10" width="175" height="30" hTextAlign="Center">
+				<expression><![CDATA[$F{TOTAL_SPENT}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="c3a7b9b9-d7ae-4715-b47c-a380031c1bcb"/>
+			</element>
+			<element kind="line" uuid="9023def0-53d8-4b17-b924-7d41fa66ed42" x="0" y="45" width="550" height="1"/>
+		</band>
+	</detail>
+	<columnFooter height="50" splitType="Stretch"/>
+	<pageFooter height="54" splitType="Stretch"/>
+	<summary height="216" splitType="Stretch">
+		<element kind="chart" chartType="stackedBar3D" uuid="7aca9274-fa7d-42f8-8bb1-16aec0feda46" x="10" y="20" width="535" height="179" evaluationTime="Report">
+			<dataset kind="category">
+				<series>
+					<seriesExpression><![CDATA[$F{CATEGORY_NAME}]]></seriesExpression>
+					<categoryExpression><![CDATA[new java.text.SimpleDateFormat("MMMM").format($F{MONTH_START})
+]]></categoryExpression>
+					<valueExpression><![CDATA[$F{TOTAL_SPENT}]]></valueExpression>
+				</series>
+			</dataset>
+			<plot categoryAxisLabelColor="#000000" categoryAxisTickLabelColor="#000000" categoryAxisLineColor="#000000" valueAxisTickLabelColor="#000000" valueAxisLabelColor="#000000" valueAxisLineColor="#000000">
+				<itemLabel/>
+			</plot>
+		</element>
+	</summary>
+</jasperReport>

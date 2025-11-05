@@ -1,3 +1,4 @@
+com\example\controller\ReportController$ReportAction.class
 com\example\db\SQLiteConnection.class
 com\example\Main.class
 com\example\service\BudgetService.class
@@ -7,6 +8,7 @@ com\example\service\SavingsGoalService.class
 com\example\dao\BudgetDao.class
 com\example\service\SyncLogService.class
 com\example\Login.class
+com\example\controller\BudgetController$1.class
 com\example\dao\SavingsGoalDao.class
 com\example\db\OracleConnection.class
 com\example\controller\BudgetController.class
