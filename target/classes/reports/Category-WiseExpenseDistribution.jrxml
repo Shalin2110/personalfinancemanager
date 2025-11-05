@@ -1,0 +1,79 @@
+<!-- Created with Jaspersoft Studio version 7.0.3.final using JasperReports Library version 7.0.3-41034ca841d452f3305ba55b9042260aaa1ab5dd  -->
+<jasperReport name="Category-WiseExpenseDistribution" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="605264be-fd57-4ae7-9bab-c3b6350f74eb">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Oracle_Central"/>
+	<query language="SQL"><![CDATA[SELECT
+    c.name AS category,
+    SUM(e.amount) AS total_spent
+FROM expense_central e
+JOIN category_central c
+  ON e.category_id = c.category_id
+WHERE e.delete_flag = 0
+  AND c.delete_flag = 0
+  AND c.type = 'EXPENSE'
+GROUP BY c.name
+ORDER BY total_spent DESC
+]]></query>
+	<field name="CATEGORY" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="CATEGORY"/>
+		<property name="com.jaspersoft.studio.field.label" value="CATEGORY"/>
+	</field>
+	<field name="TOTAL_SPENT" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="TOTAL_SPENT"/>
+		<property name="com.jaspersoft.studio.field.label" value="TOTAL_SPENT"/>
+	</field>
+	<background splitType="Stretch"/>
+	<title height="79" splitType="Stretch">
+		<element kind="rectangle" uuid="f2501965-7023-462e-a860-2c991a5b877a" mode="Transparent" x="0" y="0" width="555" height="79"/>
+		<element kind="staticText" uuid="ff5ce6ae-1eaf-42fb-a859-ac42d7ef310a" x="80" y="10" width="400" height="60" fontSize="24.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Category-Wise Expense Distribution]]></text>
+		</element>
+	</title>
+	<pageHeader height="36" splitType="Stretch">
+		<element kind="staticText" uuid="4fd153e4-847a-4f69-90d1-1922203036bb" x="10" y="12" width="30" height="13">
+			<text><![CDATA[Date:]]></text>
+		</element>
+		<element kind="textField" uuid="e1012903-d198-4af6-beb7-9c7c3ff05ea1" x="40" y="11" width="100" height="14" pattern="MMMMM dd, yyyy">
+			<expression><![CDATA[new java.util.Date()]]></expression>
+		</element>
+	</pageHeader>
+	<columnHeader height="61" splitType="Stretch">
+		<element kind="rectangle" uuid="b1d097f3-4892-418b-a516-de2b4e026f3d" mode="Transparent" x="1" y="8" width="554" height="42"/>
+		<element kind="staticText" uuid="c3329f63-41aa-4d29-be34-0df8183232b6" x="10" y="15" width="268" height="30" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Category]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="41575016-3415-4eae-8192-cff7345c597d"/>
+		</element>
+		<element kind="staticText" uuid="db87a6b7-4553-4db3-b19c-e87795161c32" x="278" y="15" width="267" height="30" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Total Amount Spent]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="65f9c31d-2bb9-4505-ab8a-e298b0ee0ec2"/>
+		</element>
+	</columnHeader>
+	<detail>
+		<band height="52" splitType="Stretch">
+			<element kind="textField" uuid="7a47a127-18f1-4fc0-9b52-a5c624af8f3a" x="10" y="10" width="270" height="30" hTextAlign="Center">
+				<expression><![CDATA[$F{CATEGORY}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="41575016-3415-4eae-8192-cff7345c597d"/>
+			</element>
+			<element kind="textField" uuid="8b61e6d5-ceb9-4a2e-b4a5-51c1fcae9b59" x="280" y="10" width="265" height="30" hTextAlign="Center">
+				<expression><![CDATA[$F{TOTAL_SPENT}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="65f9c31d-2bb9-4505-ab8a-e298b0ee0ec2"/>
+			</element>
+			<element kind="line" uuid="6980d836-7ba8-4108-802e-3ceb6de70955" x="0" y="48" width="555" height="1"/>
+		</band>
+	</detail>
+	<columnFooter height="45" splitType="Stretch"/>
+	<pageFooter height="54" splitType="Stretch"/>
+	<summary height="214" splitType="Stretch">
+		<element kind="chart" chartType="pie3D" uuid="c78e5496-74bf-4381-b23e-1397d26b79fa" x="80" y="7" width="400" height="200" evaluationTime="Report">
+			<dataset kind="pie">
+				<series>
+					<keyExpression><![CDATA[$F{CATEGORY}]]></keyExpression>
+					<valueExpression><![CDATA[$F{TOTAL_SPENT}]]></valueExpression>
+				</series>
+			</dataset>
+			<plot>
+				<itemLabel/>
+			</plot>
+		</element>
+	</summary>
+</jasperReport>

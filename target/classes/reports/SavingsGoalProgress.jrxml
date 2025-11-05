@@ -1,0 +1,132 @@
+<!-- Created with Jaspersoft Studio version 7.0.3.final using JasperReports Library version 7.0.3-41034ca841d452f3305ba55b9042260aaa1ab5dd  -->
+<jasperReport name="SavingsGoalProgress" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8c717684-6768-4603-b86d-657bdc7bc7b7">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Oracle_Central"/>
+	<query language="SQL"><![CDATA[SELECT
+    name                                        AS goalname,
+    target_amount                               AS targetamount,
+    current_amount                              AS presentamount,
+    round(current_amount * 100 / target_amount) AS progresspercent,
+    to_char(start_date, 'DD Mon YYYY')          AS startdate,
+    to_char(target_date, 'DD Mon YYYY')         AS enddate
+FROM
+    savings_goal_central
+WHERE
+    delete_flag = 0
+    AND target_date >= TRUNC(SYSDATE)
+ORDER BY
+    progresspercent DESC
+]]></query>
+	<field name="GOALNAME" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="GOALNAME"/>
+		<property name="com.jaspersoft.studio.field.label" value="GOALNAME"/>
+	</field>
+	<field name="TARGETAMOUNT" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="TARGETAMOUNT"/>
+		<property name="com.jaspersoft.studio.field.label" value="TARGETAMOUNT"/>
+	</field>
+	<field name="PRESENTAMOUNT" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="PRESENTAMOUNT"/>
+		<property name="com.jaspersoft.studio.field.label" value="PRESENTAMOUNT"/>
+	</field>
+	<field name="PROGRESSPERCENT" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="PROGRESSPERCENT"/>
+		<property name="com.jaspersoft.studio.field.label" value="PROGRESSPERCENT"/>
+	</field>
+	<field name="STARTDATE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="STARTDATE"/>
+		<property name="com.jaspersoft.studio.field.label" value="STARTDATE"/>
+	</field>
+	<field name="ENDDATE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="ENDDATE"/>
+		<property name="com.jaspersoft.studio.field.label" value="ENDDATE"/>
+	</field>
+	<background splitType="Stretch"/>
+	<title height="79" splitType="Stretch">
+		<element kind="rectangle" uuid="bc9fafa3-e5bf-47db-8e69-30fa426c8a63" mode="Transparent" x="0" y="10" width="555" height="60"/>
+		<element kind="staticText" uuid="427887ac-e770-4470-b268-50abf100e0ec" x="40" y="10" width="470" height="60" fontSize="24.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Savings Goal Progress Report]]></text>
+		</element>
+	</title>
+	<pageHeader height="40" splitType="Stretch">
+		<element kind="staticText" uuid="b60c3193-2206-4a5b-b892-d7f1dd10a7c4" x="0" y="13" width="30" height="14" bold="true">
+			<text><![CDATA[Date:]]></text>
+		</element>
+		<element kind="textField" uuid="b21e7c4d-214c-48a5-abb1-d618085cb2a1" x="30" y="13" width="100" height="16" pattern="MMMMM dd, yyyy">
+			<expression><![CDATA[new java.util.Date()]]></expression>
+		</element>
+	</pageHeader>
+	<columnHeader height="61" splitType="Stretch">
+		<element kind="rectangle" uuid="4ef17ebb-dbe2-4395-b920-dfb6c1609c00" mode="Transparent" x="0" y="10" width="555" height="40"/>
+		<element kind="staticText" uuid="4c14278a-0a6b-40e7-8b7d-794a06e857db" x="10" y="15" width="85" height="30" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Goal Name]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="a28b1d82-ac86-4739-b45c-74325d3c2225"/>
+		</element>
+		<element kind="staticText" uuid="677146cf-81f9-4153-b16f-af1d93443599" x="95" y="15" width="92" height="30" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Target Amount]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="6fa5b6f8-79de-4508-b276-1f55dbd7f93c"/>
+		</element>
+		<element kind="staticText" uuid="ed07a26c-ac1d-467f-9fc2-5c9c87715fc7" x="187" y="15" width="92" height="30" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Present Amount]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="613e2631-000d-4d94-9272-2267e3c1773e"/>
+		</element>
+		<element kind="staticText" uuid="04b83d42-a03f-4167-9f46-081e164724b5" x="279" y="15" width="92" height="30" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Progress %]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="20975130-f5e3-4571-96b3-547590b907c8"/>
+		</element>
+		<element kind="staticText" uuid="13c946b2-6917-4a3b-8b7c-23b399bb35d4" x="371" y="15" width="92" height="30" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Start Date]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="b132545b-106b-42c3-a64b-1d74c6028716"/>
+		</element>
+		<element kind="staticText" uuid="bf58540e-fbb6-4460-9128-598d552ac3a0" x="463" y="15" width="82" height="30" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[End Date]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f6281ce0-5e4e-4bee-a442-d557a7d044b1"/>
+		</element>
+	</columnHeader>
+	<detail>
+		<band height="50" splitType="Stretch">
+			<element kind="textField" uuid="8484dcde-1267-4940-b64c-934ed02d6001" x="10" y="10" width="85" height="30" hTextAlign="Center">
+				<expression><![CDATA[$F{GOALNAME}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="a28b1d82-ac86-4739-b45c-74325d3c2225"/>
+			</element>
+			<element kind="textField" uuid="edd55beb-478c-4eff-a9f9-2ca210add3f1" x="95" y="10" width="92" height="30" hTextAlign="Center">
+				<expression><![CDATA[$F{TARGETAMOUNT}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="6fa5b6f8-79de-4508-b276-1f55dbd7f93c"/>
+			</element>
+			<element kind="textField" uuid="22c51df0-1aa7-4502-9bb3-c59fe6702977" x="187" y="10" width="92" height="30" hTextAlign="Center">
+				<expression><![CDATA[$F{PRESENTAMOUNT}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="613e2631-000d-4d94-9272-2267e3c1773e"/>
+			</element>
+			<element kind="textField" uuid="90445b2c-d06c-4586-9891-146d5d5256da" x="279" y="10" width="92" height="30" hTextAlign="Center">
+				<expression><![CDATA[$F{PROGRESSPERCENT}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="20975130-f5e3-4571-96b3-547590b907c8"/>
+			</element>
+			<element kind="textField" uuid="1464f88e-f620-41e4-b849-1fcfa8f39c44" x="371" y="10" width="92" height="30" hTextAlign="Center">
+				<expression><![CDATA[$F{STARTDATE}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="b132545b-106b-42c3-a64b-1d74c6028716"/>
+			</element>
+			<element kind="textField" uuid="494cff9b-bc69-453d-93b8-476209da084b" x="463" y="10" width="82" height="30" hTextAlign="Center">
+				<expression><![CDATA[$F{ENDDATE}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f6281ce0-5e4e-4bee-a442-d557a7d044b1"/>
+			</element>
+			<element kind="line" uuid="ee8b0ee4-1949-449d-beb3-0a2fc301c2cd" x="0" y="45" width="555" height="1"/>
+		</band>
+	</detail>
+	<columnFooter height="45" splitType="Stretch"/>
+	<pageFooter height="54" splitType="Stretch"/>
+	<summary height="221" splitType="Stretch">
+		<element kind="chart" chartType="pie" uuid="923332c7-e5c8-44bf-abb6-623bd402c615" x="130" y="10" width="300" height="200" evaluationTime="Report">
+			<dataset kind="pie">
+				<series>
+					<keyExpression><![CDATA[$F{GOALNAME}]]></keyExpression>
+					<valueExpression><![CDATA[$F{PROGRESSPERCENT}]]></valueExpression>
+					<labelExpression><![CDATA[$F{GOALNAME} + " (" + $F{PROGRESSPERCENT} + "%)"
+]]></labelExpression>
+				</series>
+			</dataset>
+			<plot>
+				<itemLabel/>
+			</plot>
+		</element>
+	</summary>
+</jasperReport>

@@ -1,0 +1,154 @@
+<!-- Created with Jaspersoft Studio version 7.0.3.final using JasperReports Library version 7.0.3-41034ca841d452f3305ba55b9042260aaa1ab5dd  -->
+<jasperReport name="BudgetAdherenceTracking" language="java" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="58cfdc51-1fda-4ea7-b430-ee73cf3eaacd">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Oracle_Central"/>
+	<query language="SQL"><![CDATA[SELECT
+    c.name              AS category,
+    b.start_date        AS startdate,
+    b.end_date          AS enddate,
+    b.amount            AS budgetamount,
+    COALESCE(es.actualspent, 0) AS actualspent,
+    ROUND(
+      COALESCE(es.actualspent, 0) * 100.0 / NULLIF(b.amount, 0),
+      2
+    ) AS adherencepercent
+FROM budget_central b
+JOIN category_central c
+  ON b.category_id = c.category_id
+LEFT JOIN (
+    SELECT
+        b2.budget_id,
+        SUM(e.amount) AS actualspent
+    FROM budget_central b2
+    LEFT JOIN expense_central e
+      ON e.category_id = b2.category_id
+     AND e.expense_date BETWEEN b2.start_date AND b2.end_date
+     AND e.delete_flag = 0
+    WHERE b2.delete_flag = 0
+    GROUP BY b2.budget_id
+) es
+  ON es.budget_id = b.budget_id
+WHERE b.delete_flag = 0
+  AND c.type = 'EXPENSE'
+ORDER BY b.start_date DESC
+]]></query>
+	<field name="CATEGORY" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="CATEGORY"/>
+		<property name="com.jaspersoft.studio.field.label" value="CATEGORY"/>
+	</field>
+	<field name="STARTDATE" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="STARTDATE"/>
+		<property name="com.jaspersoft.studio.field.label" value="STARTDATE"/>
+	</field>
+	<field name="ENDDATE" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.name" value="ENDDATE"/>
+		<property name="com.jaspersoft.studio.field.label" value="ENDDATE"/>
+	</field>
+	<field name="BUDGETAMOUNT" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="BUDGETAMOUNT"/>
+		<property name="com.jaspersoft.studio.field.label" value="BUDGETAMOUNT"/>
+	</field>
+	<field name="ACTUALSPENT" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="ACTUALSPENT"/>
+		<property name="com.jaspersoft.studio.field.label" value="ACTUALSPENT"/>
+	</field>
+	<field name="ADHERENCEPERCENT" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="ADHERENCEPERCENT"/>
+		<property name="com.jaspersoft.studio.field.label" value="ADHERENCEPERCENT"/>
+	</field>
+	<background splitType="Stretch"/>
+	<title height="79" splitType="Stretch">
+		<element kind="rectangle" uuid="699dcbbd-a43f-4ef7-a942-a2dcade8daac" mode="Transparent" x="-1" y="8" width="556" height="60"/>
+		<element kind="staticText" uuid="c598244a-2171-4bb4-bfa1-8944d449a86b" x="39" y="8" width="480" height="60" fontSize="24.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Budget Adherence Tracking Report]]></text>
+		</element>
+	</title>
+	<pageHeader height="43" splitType="Stretch">
+		<element kind="staticText" uuid="4fccd755-0cfc-460b-a27f-a7a1cb410f8e" x="0" y="13" width="30" height="15" bold="true" vTextAlign="Middle">
+			<text><![CDATA[Date:]]></text>
+		</element>
+		<element kind="textField" uuid="fd0cf4a3-85b7-45c9-a83d-0d5c12ac6c46" x="30" y="14" width="100" height="14" pattern="MMMMM dd, yyyy">
+			<expression><![CDATA[new java.util.Date()]]></expression>
+		</element>
+	</pageHeader>
+	<columnHeader height="57" splitType="Stretch">
+		<element kind="rectangle" uuid="7a886019-3464-424f-afbd-24efcbf69a41" mode="Transparent" x="0" y="8" width="555" height="41"/>
+		<element kind="staticText" uuid="c656b0b0-af58-44d6-a04f-7c29f861ebe6" x="0" y="13" width="95" height="30" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Category]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="fbea19a9-8c9f-4867-8d64-ba90cb0fce6c"/>
+		</element>
+		<element kind="staticText" uuid="14458493-ccb3-43b1-9ff3-b1187e3d9f0b" x="95" y="13" width="92" height="30" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Start Date]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ada7e57b-375b-4f20-94b1-d09dc7815b5d"/>
+		</element>
+		<element kind="staticText" uuid="b924fa73-8112-4899-baf9-aed7f3c00ec8" x="187" y="13" width="92" height="30" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[End Date]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="32e557cc-0131-4077-ab63-ba3e4c4cecfd"/>
+		</element>
+		<element kind="staticText" uuid="8c5b3e7a-1991-439a-81ea-b826ca7335b7" x="279" y="13" width="92" height="30" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Budget Amount]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1a4f8f2a-2b43-4e95-878f-a0905b50f3e3"/>
+		</element>
+		<element kind="staticText" uuid="f07a16e9-fb0a-4218-b5da-e026af706ab3" x="371" y="13" width="92" height="30" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Actual Spent]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="b2bd87fa-b3af-42e7-b6c1-37e8405868fd"/>
+		</element>
+		<element kind="staticText" uuid="d8d7a76c-312f-4769-993e-b449790c8ef4" x="463" y="13" width="92" height="30" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Adherence %]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="befd5c94-2a60-48ab-83cd-2e70fb4d1c09"/>
+		</element>
+	</columnHeader>
+	<detail>
+		<band height="50" splitType="Stretch">
+			<element kind="textField" uuid="caba2017-7e7e-48c3-9618-09aa605790b4" x="0" y="10" width="95" height="30" hTextAlign="Center">
+				<expression><![CDATA[$F{CATEGORY}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="fbea19a9-8c9f-4867-8d64-ba90cb0fce6c"/>
+			</element>
+			<element kind="textField" uuid="baa0bc16-4247-4764-8c2f-9d87814fe3fa" x="95" y="10" width="92" height="30" pattern="dd MMM yyyy" hTextAlign="Center">
+				<expression><![CDATA[$F{STARTDATE}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ada7e57b-375b-4f20-94b1-d09dc7815b5d"/>
+			</element>
+			<element kind="textField" uuid="bfadd330-1ce6-4c44-adee-401409ef2b46" x="187" y="10" width="92" height="30" pattern="dd MMM yyyy" hTextAlign="Center">
+				<expression><![CDATA[$F{ENDDATE}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="32e557cc-0131-4077-ab63-ba3e4c4cecfd"/>
+			</element>
+			<element kind="textField" uuid="4b31d053-760c-4b3d-9de8-7c40095c977d" x="279" y="10" width="92" height="30" hTextAlign="Center">
+				<expression><![CDATA[$F{BUDGETAMOUNT}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1a4f8f2a-2b43-4e95-878f-a0905b50f3e3"/>
+			</element>
+			<element kind="textField" uuid="576e83c7-102f-4d97-867f-1fe9a97b23d5" x="371" y="10" width="92" height="30" hTextAlign="Center">
+				<expression><![CDATA[$F{ACTUALSPENT}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="b2bd87fa-b3af-42e7-b6c1-37e8405868fd"/>
+			</element>
+			<element kind="textField" uuid="120be826-7e7f-48d6-b4dd-811c56935116" x="463" y="10" width="92" height="30" hTextAlign="Center">
+				<expression><![CDATA[$F{ADHERENCEPERCENT}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="befd5c94-2a60-48ab-83cd-2e70fb4d1c09"/>
+			</element>
+		</band>
+	</detail>
+	<columnFooter height="45" splitType="Stretch"/>
+	<pageFooter height="54" splitType="Stretch"/>
+	<summary height="220" splitType="Stretch">
+		<element kind="frame" uuid="2e6c21ce-27aa-41a1-a8df-43382a09e63b" x="10" y="10" width="534" height="200">
+			<element kind="chart" chartType="bar" uuid="7cacdc46-acab-4972-98a6-1e49b079273f" x="0" y="0" width="534" height="200" evaluationTime="Report">
+				<dataset kind="category">
+					<series>
+						<seriesExpression><![CDATA["Budget Amount"]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{CATEGORY}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{BUDGETAMOUNT}]]></valueExpression>
+					</series>
+					<series>
+						<seriesExpression><![CDATA["Actual Spent"]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{CATEGORY}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{ACTUALSPENT}]]></valueExpression>
+						<labelExpression><![CDATA[($F{ACTUALSPENT}.doubleValue() == 0) ? "" : new java.text.DecimalFormat("0.0'%'").format($F{ADHERENCEPERCENT})
+]]></labelExpression>
+					</series>
+				</dataset>
+				<plot categoryAxisLabelColor="#000000" categoryAxisTickLabelColor="#000000" categoryAxisLineColor="#000000" valueAxisLabelColor="#000000" valueAxisTickLabelColor="#000000" valueAxisLineColor="#000000" showLabels="true">
+					<itemLabel/>
+				</plot>
+			</element>
+		</element>
+	</summary>
+</jasperReport>
