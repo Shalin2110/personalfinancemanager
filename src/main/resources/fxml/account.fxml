@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.controller.AccountController" spacing="20"
+      style="-fx-padding: 25; -fx-background-color: #F8F9FA;">
+
+    <!-- Header Section -->
+    <VBox spacing="8">
+        <Label text="🏦 Account Management" style="-fx-font-size: 28; -fx-text-fill: #2C3E50; -fx-font-weight: bold;"/>
+        <Label text="Create and manage your financial accounts" style="-fx-font-size: 14; -fx-text-fill: #7F8C8D;"/>
+    </VBox>
+
+    <!-- Input Card -->
+    <VBox style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 2); -fx-padding: 25;">
+        <Label text="Account Details" style="-fx-font-size: 18; -fx-text-fill: #2C3E50; -fx-font-weight: bold; -fx-padding: 0 0 15 0;"/>
+
+        <GridPane hgap="15" vgap="15">
+            <columnConstraints>
+                <ColumnConstraints prefWidth="120" halignment="RIGHT"/>
+                <ColumnConstraints prefWidth="200"/>
+                <ColumnConstraints prefWidth="120" halignment="RIGHT"/>
+                <ColumnConstraints prefWidth="200"/>
+            </columnConstraints>
+
+            <rowConstraints>
+                <RowConstraints prefHeight="35"/>
+                <RowConstraints prefHeight="35"/>
+            </rowConstraints>
+
+            <!-- Row 1 -->
+            <Label text="Account Name:" GridPane.rowIndex="0" GridPane.columnIndex="0"
+                   style="-fx-font-weight: bold; -fx-text-fill: #34495E;"/>
+            <TextField fx:id="txtName" prefWidth="180" GridPane.rowIndex="0" GridPane.columnIndex="1"
+                       style="-fx-background-radius: 6;" promptText="Account name"/>
+
+            <Label text="Currency:" GridPane.rowIndex="0" GridPane.columnIndex="2"
+                   style="-fx-font-weight: bold; -fx-text-fill: #34495E;"/>
+            <TextField fx:id="txtCurrency" prefWidth="180" GridPane.rowIndex="0" GridPane.columnIndex="3"
+                       style="-fx-background-radius: 6;" promptText="LKR"/>
+
+            <!-- Row 2 -->
+            <Label text="Opening Balance:" GridPane.rowIndex="1" GridPane.columnIndex="0"
+                   style="-fx-font-weight: bold; -fx-text-fill: #34495E;"/>
+            <TextField fx:id="txtOpeningBalance" prefWidth="180" GridPane.rowIndex="1" GridPane.columnIndex="1"
+                       style="-fx-background-radius: 6;" promptText="0.00"/>
+        </GridPane>
+
+        <!-- Action Buttons -->
+        <HBox spacing="12" alignment="CENTER" style="-fx-padding: 20 0 0 0;">
+            <Button fx:id="btnAdd" onAction="#addOrUpdateAccount" text="➕ Add Account"
+                    style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 8 16;"/>
+            <Button onAction="#clearForm" text="🔄 Clear"
+                    style="-fx-background-color: #78909C; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 8 16;"/>
+            <Button onAction="#loadAccounts" text="📥 Refresh"
+                    style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 8 16;"/>
+        </HBox>
+    </VBox>
+
+    <!-- Accounts Table Card -->
+    <VBox style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+        <HBox alignment="CENTER_LEFT" style="-fx-padding: 20 20 15 20; -fx-background-color: #F8F9FA; -fx-background-radius: 12 12 0 0;">
+            <Label text="Your Accounts" style="-fx-font-size: 18; -fx-text-fill: #2C3E50; -fx-font-weight: bold;"/>
+        </HBox>
+
+        <TableView fx:id="tblAccount" prefHeight="350" style="-fx-background-radius: 0 0 12 12; -fx-border-width: 0;">
+            <columns>
+                <TableColumn fx:id="colId" prefWidth="60" text="ID" style="-fx-alignment: CENTER;"/>
+                <TableColumn fx:id="colName" prefWidth="200" text="Account Name" style="-fx-alignment: CENTER_LEFT;"/>
+                <TableColumn fx:id="colCurrency" prefWidth="100" text="Currency" style="-fx-alignment: CENTER;"/>
+                <TableColumn fx:id="colBalance" prefWidth="150" text="Opening Balance" style="-fx-alignment: CENTER_RIGHT;"/>
+                <TableColumn fx:id="colActions" prefWidth="150" text="Actions" style="-fx-alignment: CENTER;"/>
+            </columns>
+        </TableView>
+    </VBox>
+
+</VBox>

@@ -8,18 +8,29 @@ import java.io.File;
 
 public class ReportService {
 
-    private void showReport(String jrxmlPath, Connection conn) throws JRException {
+    private JasperPrint showReport(String jrxmlPath, Connection conn) throws JRException {
         JasperReport report = JasperCompileManager.compileReport(
                 getClass().getResourceAsStream("/reports/" + jrxmlPath)
         );
         JasperPrint print = JasperFillManager.fillReport(report, new HashMap<>(), conn);
-        JasperViewer.viewReport(print, false);
+
+        // Only show the viewer if there's data
+        if (print.getPages() != null && !print.getPages().isEmpty()) {
+            JasperViewer.viewReport(print, false);
+        }
+
+        return print;
     }
 
-    private void saveReportAsPDF(String jrxml, Connection conn) throws JRException {
+    private boolean saveReportAsPDF(String jrxml, Connection conn) throws JRException {
         JasperReport report = JasperCompileManager.compileReport(
                 getClass().getResourceAsStream("/reports/" + jrxml));
         JasperPrint print = JasperFillManager.fillReport(report, new HashMap<>(), conn);
+
+        // Check if there's data to save
+        if (print.getPages() == null || print.getPages().isEmpty()) {
+            return false;
+        }
 
         File outDir = new File("reports_output");
         if (!outDir.exists()) outDir.mkdirs();
@@ -27,45 +38,46 @@ public class ReportService {
         String outputPath = "reports_output/" + jrxml.replace(".jrxml", ".pdf");
         JasperExportManager.exportReportToPdfFile(print, outputPath);
         System.out.println("PDF Saved At: " + outputPath);
+        return true;
     }
 
-    public void showMonthlyExpenditureReport(Connection conn) throws JRException {
-        showReport("MonthlyExpenditureAnalysis.jrxml", conn);
+    public JasperPrint showMonthlyExpenditureReport(Connection conn) throws JRException {
+        return showReport("MonthlyExpenditureAnalysis.jrxml", conn);
     }
 
-    public void saveMonthlyExpenditureReport(Connection conn) throws JRException {
-        saveReportAsPDF("MonthlyExpenditureAnalysis.jrxml", conn);
+    public boolean saveMonthlyExpenditureReport(Connection conn) throws JRException {
+        return saveReportAsPDF("MonthlyExpenditureAnalysis.jrxml", conn);
     }
 
-    public void showBudgetAdherenceReport(Connection conn) throws JRException {
-        showReport("BudgetAdherenceTracking.jrxml", conn);
+    public JasperPrint showBudgetAdherenceReport(Connection conn) throws JRException {
+        return showReport("BudgetAdherenceTracking.jrxml", conn);
     }
 
-    public void saveBudgetAdherenceReport(Connection conn) throws JRException {
-        saveReportAsPDF("BudgetAdherenceTracking.jrxml", conn);
+    public boolean saveBudgetAdherenceReport(Connection conn) throws JRException {
+        return saveReportAsPDF("BudgetAdherenceTracking.jrxml", conn);
     }
 
-    public void showSavingsGoalProgressReport(Connection conn) throws JRException {
-        showReport("SavingsGoalProgress.jrxml", conn);
+    public JasperPrint showSavingsGoalProgressReport(Connection conn) throws JRException {
+        return showReport("SavingsGoalProgress.jrxml", conn);
     }
 
-    public void saveSavingsGoalProgressReport(Connection conn) throws JRException {
-        saveReportAsPDF("SavingsGoalProgress.jrxml", conn);
+    public boolean saveSavingsGoalProgressReport(Connection conn) throws JRException {
+        return saveReportAsPDF("SavingsGoalProgress.jrxml", conn);
     }
 
-    public void showCategoryExpenseDistributionReport(Connection conn) throws JRException {
-        showReport("Category-WiseExpenseDistribution.jrxml", conn);
+    public JasperPrint showCategoryExpenseDistributionReport(Connection conn) throws JRException {
+        return showReport("Category-WiseExpenseDistribution.jrxml", conn);
     }
 
-    public void saveCategoryExpenseDistributionReport(Connection conn) throws JRException {
-        saveReportAsPDF("Category-WiseExpenseDistribution.jrxml", conn);
+    public boolean saveCategoryExpenseDistributionReport(Connection conn) throws JRException {
+        return saveReportAsPDF("Category-WiseExpenseDistribution.jrxml", conn);
     }
 
-    public void showForecastSavingsReport(Connection conn) throws JRException {
-        showReport("ForecastedSavingTrends.jrxml", conn);
+    public JasperPrint showForecastSavingsReport(Connection conn) throws JRException {
+        return showReport("ForecastedSavingTrends.jrxml", conn);
     }
 
-    public void saveForecastSavingsReport(Connection conn) throws JRException {
-        saveReportAsPDF("ForecastedSavingTrends.jrxml", conn);
+    public boolean saveForecastSavingsReport(Connection conn) throws JRException {
+        return saveReportAsPDF("ForecastedSavingTrends.jrxml", conn);
     }
 }

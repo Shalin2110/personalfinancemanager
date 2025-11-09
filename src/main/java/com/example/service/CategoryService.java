@@ -4,47 +4,31 @@ import com.example.dao.CategoryDao;
 import com.example.model.Category;
 import java.sql.SQLException;
 import java.util.List;
-
-import com.example.db.SQLiteConnection;
-
-import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
 
 public class CategoryService {
-    public Map<String, Integer> getCategoryMap() {
-        Map<String, Integer> categories = new HashMap<>();
-        String sql = "SELECT category_id, name FROM category WHERE delete_flag = 0";
-        try (Connection conn = SQLiteConnection.getConnection();
-             Statement st = conn.createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
-            while (rs.next()) {
-                categories.put(rs.getString("name"), rs.getInt("category_id"));
-            }
-        } catch (SQLException e) {
-            System.err.println("Error loading categories: " + e.getMessage());
-        }
-        return categories;
-    }
     private final CategoryDao dao = new CategoryDao();
 
     // Add new Category
-    public void addCategory(Category c) {
+    public void addCategory(Category category) {
         try {
-            dao.addCategory(c);
-            dao.syncToOracle(c);
+            // Set the current user ID before adding
+            category.setUserId(UserService.getCurrentUserId());
+            dao.addCategory(category);
+            System.out.println("[CategoryService] Category added successfully.");
         } catch (SQLException e) {
-            System.err.println("Error adding category: " + e.getMessage());
+            System.err.println("[CategoryService] Error adding category: " + e.getMessage());
         }
     }
 
     // Update existing Category
-    public void updateCategory(Category c) {
+    public void updateCategory(Category category) {
         try {
-            dao.updateCategory(c);
-            dao.syncToOracle(c);
+            dao.updateCategory(category);
+            System.out.println("[CategoryService] Category updated successfully.");
         } catch (SQLException e) {
-            System.err.println("Error updating category: " + e.getMessage());
+            System.err.println("[CategoryService] Error updating category: " + e.getMessage());
         }
     }
 
@@ -52,19 +36,51 @@ public class CategoryService {
     public void deleteCategory(int id) {
         try {
             dao.deleteCategory(id);
+            System.out.println("[CategoryService] Category deleted successfully.");
         } catch (SQLException e) {
-            System.err.println("Error deleting category: " + e.getMessage());
+            System.err.println("[CategoryService] Error deleting category: " + e.getMessage());
         }
     }
 
-    // Get all categories
+    // Get all categories for current user
     public List<Category> getAllCategories() {
         try {
-            return dao.getAllCategories();
+            int userId = UserService.getCurrentUserId();
+            if (userId == -1) return List.of(); // No user logged in
+            return dao.getCategoriesByUser(userId);
         } catch (SQLException e) {
-            System.err.println("Error fetching categories: " + e.getMessage());
+            System.err.println("[CategoryService] Error fetching categories: " + e.getMessage());
             return List.of();
         }
     }
 
+    // Get categories for dropdown (parent categories)
+    public List<Category> getCategoriesForDropdown() {
+        try {
+            int userId = UserService.getCurrentUserId();
+            if (userId == -1) return List.of(); // No user logged in
+            return dao.getCategoriesForDropdown(userId);
+        } catch (SQLException e) {
+            System.err.println("[CategoryService] Error fetching categories for dropdown: " + e.getMessage());
+            return List.of();
+        }
+    }
+
+    // Get category map for dropdowns
+    public Map<String, Integer> getCategoryMap() {
+        Map<String, Integer> categories = new HashMap<>();
+        try {
+            List<Category> categoryList = getAllCategories(); // Use getAllCategories which filters by user
+            for (Category category : categoryList) {
+                categories.put(category.getName(), category.getCategoryId());
+            }
+        } catch (Exception e) {
+            System.err.println("[CategoryService] Error loading categories: " + e.getMessage());
+        }
+        return categories;
+    }
+
+    public int countCategories() {
+        return getAllCategories().size();
+    }
 }

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<VBox spacing="25" alignment="TOP_CENTER" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.example.controller.DashboardHomeController"
+      style="-fx-padding: 30; -fx-background-color: #F8F9FA;">
+
+    <!-- Welcome Header -->
+    <VBox spacing="8" alignment="CENTER">
+        <Label text="📊 Dashboard Overview" style="-fx-font-size: 32; -fx-text-fill: #2C3E50; -fx-font-weight: bold;" />
+        <Label text="Your financial health at a glance" style="-fx-font-size: 16; -fx-text-fill: #7F8C8D;" />
+    </VBox>
+
+    <!-- Stats Cards Grid -->
+    <GridPane hgap="20" vgap="20" alignment="CENTER">
+        <columnConstraints>
+            <ColumnConstraints prefWidth="220" halignment="CENTER"/>
+            <ColumnConstraints prefWidth="220" halignment="CENTER"/>
+            <ColumnConstraints prefWidth="220" halignment="CENTER"/>
+            <ColumnConstraints prefWidth="220" halignment="CENTER"/>
+            <ColumnConstraints prefWidth="220" halignment="CENTER"/>
+        </columnConstraints>
+
+        <!-- Budgets Card -->
+        <VBox alignment="CENTER" spacing="10" style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 3); -fx-padding: 25;" GridPane.columnIndex="0">
+            <Label text="💰" style="-fx-font-size: 32;"/>
+            <Label text="Total Budgets" style="-fx-font-size: 16; -fx-text-fill: #7F8C8D; -fx-font-weight: bold;"/>
+            <Label fx:id="lblTotalBudgets" text="0" style="-fx-font-size: 36; -fx-text-fill: #3F51B5; -fx-font-weight: bold;"/>
+        </VBox>
+
+        <!-- Goals Card -->
+        <VBox alignment="CENTER" spacing="10" style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 3); -fx-padding: 25;" GridPane.columnIndex="1">
+            <Label text="🎯" style="-fx-font-size: 32;"/>
+            <Label text="Savings Goals" style="-fx-font-size: 16; -fx-text-fill: #7F8C8D; -fx-font-weight: bold;"/>
+            <Label fx:id="lblTotalGoals" text="0" style="-fx-font-size: 36; -fx-text-fill: #009688; -fx-font-weight: bold;"/>
+        </VBox>
+
+        <!-- Expenses Card -->
+        <VBox alignment="CENTER" spacing="10" style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 3); -fx-padding: 25;" GridPane.columnIndex="2">
+            <Label text="💸" style="-fx-font-size: 32;"/>
+            <Label text="Total Expenses" style="-fx-font-size: 16; -fx-text-fill: #7F8C8D; -fx-font-weight: bold;"/>
+            <Label fx:id="lblTotalExpenses" text="0.00" style="-fx-font-size: 32; -fx-text-fill: #E53935; -fx-font-weight: bold;"/>
+        </VBox>
+
+        <!-- Accounts Card -->
+        <VBox alignment="CENTER" spacing="10" style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 3); -fx-padding: 25;" GridPane.columnIndex="3">
+            <Label text="🏦" style="-fx-font-size: 32;"/>
+            <Label text="Accounts" style="-fx-font-size: 16; -fx-text-fill: #7F8C8D; -fx-font-weight: bold;"/>
+            <Label fx:id="lblTotalAccounts" text="0" style="-fx-font-size: 36; -fx-text-fill: #FF9800; -fx-font-weight: bold;"/>
+        </VBox>
+
+        <!-- Categories Card -->
+        <VBox alignment="CENTER" spacing="10" style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 3); -fx-padding: 25;" GridPane.columnIndex="4">
+            <Label text="📂" style="-fx-font-size: 32;"/>
+            <Label text="Categories" style="-fx-font-size: 16; -fx-text-fill: #7F8C8D; -fx-font-weight: bold;"/>
+            <Label fx:id="lblTotalCategories" text="0" style="-fx-font-size: 36; -fx-text-fill: #9C27B0; -fx-font-weight: bold;"/>
+        </VBox>
+    </GridPane>
+
+    <!-- Quick Actions -->
+    <VBox spacing="15" alignment="CENTER" style="-fx-padding: 20;">
+        <Label text="Quick Actions" style="-fx-font-size: 20; -fx-text-fill: #2C3E50; -fx-font-weight: bold;"/>
+        <HBox spacing="15" alignment="CENTER">
+            <Button text="➕ Add Budget" onAction="#openBudgets" style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 10 20;"/>
+            <Button text="🎯 Set Goal" onAction="#openGoals" style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 10 20;"/>
+            <Button text="💸 Add Expense" onAction="#openExpenses" style="-fx-background-color: #E53935; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 10 20;"/>
+            <Button text="🏦 Manage Accounts" onAction="#openAccounts" style="-fx-background-color: #FF9800; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 10 20;"/>
+            <Button text="📂 Manage Categories" onAction="#openCategories" style="-fx-background-color: #9C27B0; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 10 20;"/>
+        </HBox>
+    </VBox>
+
+    <!-- System Status -->
+    <VBox spacing="10" alignment="CENTER" style="-fx-padding: 15; -fx-background-color: #E3F2FD; -fx-background-radius: 8; -fx-border-color: #BBDEFB; -fx-border-width: 1; -fx-border-radius: 8;">
+        <Label text="ℹ️ System Information" style="-fx-font-size: 14; -fx-text-fill: #1565C0; -fx-font-weight: bold;"/>
+        <Label text="System updates automatically when Oracle is online." style="-fx-font-size: 13; -fx-text-fill: #1976D2;"/>
+        <Label fx:id="lblPendingSync" text="Pending Syncs: 0" style="-fx-font-size: 13; -fx-text-fill: #1976D2; -fx-font-weight: bold;"/>
+    </VBox>
+
+</VBox>

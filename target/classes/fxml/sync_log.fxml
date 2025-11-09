@@ -1,26 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.controller.SyncLogController">
+<?import javafx.geometry.Insets?>
 
-    <top>
-        <Label text="Synchronization Logs" style="-fx-font-size: 20; -fx-padding: 10;" />
-    </top>
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.controller.SyncLogController"
+      spacing="20" style="-fx-padding: 25; -fx-background-color: #F8F9FA;">
 
-    <center>
-        <VBox spacing="10" style="-fx-padding: 10;">
-            <Button text="Refresh Logs" onAction="#loadLogs" />
-            <TableView fx:id="tblLogs" prefHeight="400">
-                <columns>
-                    <TableColumn fx:id="colId" text="ID" prefWidth="60"/>
-                    <TableColumn fx:id="colTxn" text="Device Txn ID" prefWidth="220"/>
-                    <TableColumn fx:id="colTable" text="Table" prefWidth="120"/>
-                    <TableColumn fx:id="colStatus" text="Status" prefWidth="100"/>
-                    <TableColumn fx:id="colTime" text="Last Attempt" prefWidth="180"/>
-                    <TableColumn fx:id="colRetries" text="Retries" prefWidth="80"/>
-                </columns>
-            </TableView>
-        </VBox>
-    </center>
+    <!-- Header Section -->
+    <VBox spacing="8">
+        <Label text="🔄 Synchronization Logs" style="-fx-font-size: 28; -fx-text-fill: #2C3E50; -fx-font-weight: bold;"/>
+        <Label text="Monitor data synchronization between local and cloud databases" style="-fx-font-size: 14; -fx-text-fill: #7F8C8D;"/>
+    </VBox>
 
-</BorderPane>
+    <!-- Controls Card -->
+    <HBox spacing="15" alignment="CENTER_LEFT"
+          style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 2); -fx-padding: 20;">
+        <Button text="🔄 Refresh Logs" onAction="#loadLogs"
+                style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 8 16;"/>
+        <Label text="View real-time synchronization status and history" style="-fx-text-fill: #7F8C8D; -fx-font-size: 13;"/>
+    </HBox>
+
+    <!-- Logs Table Card -->
+    <VBox style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+        <HBox alignment="CENTER_LEFT" style="-fx-padding: 20 20 15 20; -fx-background-color: #F8F9FA; -fx-background-radius: 12 12 0 0;">
+            <Label text="Synchronization History" style="-fx-font-size: 18; -fx-text-fill: #2C3E50; -fx-font-weight: bold;"/>
+        </HBox>
+
+        <TableView fx:id="tblLogs" prefHeight="400" style="-fx-background-radius: 0 0 12 12; -fx-border-width: 0;">
+            <columns>
+                <TableColumn fx:id="colId" prefWidth="60" text="ID" style="-fx-alignment: CENTER;"/>
+                <TableColumn fx:id="colTxn" prefWidth="220" text="Transaction ID" style="-fx-alignment: CENTER_LEFT;"/>
+                <TableColumn fx:id="colTable" prefWidth="120" text="Table" style="-fx-alignment: CENTER;"/>
+                <TableColumn fx:id="colStatus" prefWidth="100" text="Status" style="-fx-alignment: CENTER;"/>
+                <TableColumn fx:id="colTime" prefWidth="180" text="Last Attempt" style="-fx-alignment: CENTER;"/>
+                <TableColumn fx:id="colRetries" prefWidth="80" text="Retries" style="-fx-alignment: CENTER;"/>
+            </columns>
+        </TableView>
+    </VBox>
+
+</VBox>
