@@ -1,0 +1,16 @@
+GRANT SELECT, INSERT, UPDATE, DELETE ON account_central TO C##finance_app;
+GRANT SELECT, INSERT, UPDATE, DELETE ON budget_central TO C##finance_app;
+GRANT SELECT, INSERT, UPDATE, DELETE ON category_central TO C##finance_app;
+GRANT SELECT, INSERT, UPDATE, DELETE ON expense_central TO C##finance_app;
+GRANT SELECT, INSERT, UPDATE, DELETE ON savings_goal_central TO C##finance_app;
+GRANT SELECT, INSERT, UPDATE, DELETE ON sync_log_central TO C##finance_app;
+GRANT SELECT, INSERT, UPDATE, DELETE ON user_central TO C##finance_app;
+
+GRANT EXECUTE ON PROC_SYNC_USER TO C##finance_app;
+GRANT EXECUTE ON PROC_SYNC_EXPENSE TO C##finance_app;
+GRANT EXECUTE ON PROC_SYNC_CATEGORY TO C##finance_app;
+GRANT EXECUTE ON PROC_SYNC_ACCOUNT TO C##finance_app;
+GRANT EXECUTE ON PROC_SYNC_BUDGET TO C##finance_app;
+GRANT EXECUTE ON PROC_SYNC_SAVINGS_GOAL TO C##finance_app;
+GRANT EXECUTE ON PROC_SYNC_SYNC_LOG TO C##finance_app;
+

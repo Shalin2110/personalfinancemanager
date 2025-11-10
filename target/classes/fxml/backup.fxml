@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.controller.BackupController"
+      spacing="20" style="-fx-padding: 25;" alignment="TOP_LEFT">
+
+    <!-- Header -->
+    <Label text="🔒 Security and Backup" style="-fx-font-size: 24; -fx-text-fill: #2C3E50; -fx-font-weight: bold;"/>
+
+    <!-- Security Status Card -->
+    <VBox style="-fx-background-color: white; -fx-background-radius: 8; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 2); -fx-padding: 20;">
+        <Label text="Security Status" style="-fx-font-size: 16; -fx-text-fill: #2C3E50; -fx-font-weight: bold;"/>
+        <Separator style="-fx-padding: 5 0 10 0;"/>
+        <HBox spacing="15" alignment="CENTER_LEFT">
+            <VBox spacing="5">
+                <Label text="🔐 Local Database Encryption" style="-fx-text-fill: #27AE60; -fx-font-weight: bold;"/>
+                <Label text="Sensitive fields are AES encrypted" style="-fx-text-fill: #7F8C8D; -fx-font-size: 12;"/>
+            </VBox>
+            <VBox spacing="5">
+                <Label text="👤 Oracle User Security" style="-fx-text-fill: #27AE60; -fx-font-weight: bold;"/>
+                <Label text="Restricted application user" style="-fx-text-fill: #7F8C8D; -fx-font-size: 12;"/>
+            </VBox>
+        </HBox>
+    </VBox>
+
+    <!-- Backup Section -->
+    <VBox spacing="15">
+        <Label text="Local Database Backup" style="-fx-font-size: 18; -fx-text-fill: #2C3E50; -fx-font-weight: bold;"/>
+
+        <!-- Backup Actions -->
+        <HBox spacing="15" alignment="CENTER_LEFT">
+            <Button text="📁 Create Backup Now" onAction="#createBackup"
+                    style="-fx-background-color: #3498DB; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 10 15;"/>
+            <Button text="🔄 Restore Backup" onAction="#showRestoreDialog"
+                    style="-fx-background-color: #E67E22; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 10 15;"/>
+            <Button text="🧹 Test Encryption" onAction="#testEncryption"
+                    style="-fx-background-color: #9B59B6; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 10 15;"/>
+        </HBox>
+
+        <!-- Backup List -->
+        <VBox spacing="10">
+            <Label text="Available Backups" style="-fx-font-size: 14; -fx-text-fill: #2C3E50; -fx-font-weight: bold;"/>
+            <ListView fx:id="backupListView" style="-fx-background-color: white; -fx-border-color: #BDC3C7; -fx-border-radius: 4; -fx-pref-height: 150;">
+                <placeholder>
+                    <Label text="No backups available" style="-fx-text-fill: #7F8C8D; -fx-font-style: italic;"/>
+                </placeholder>
+            </ListView>
+        </VBox>
+
+        <!-- Status Messages -->
+        <VBox spacing="5" visible="false" fx:id="statusBox"
+              style="-fx-background-color: #E8F5E8; -fx-background-radius: 6; -fx-border-color: #27AE60; -fx-border-radius: 6; -fx-padding: 10;">
+            <Label fx:id="statusMessage" style="-fx-text-fill: #27AE60; -fx-font-weight: bold;"/>
+        </VBox>
+
+        <!-- Oracle Backup Info -->
+        <VBox style="-fx-background-color: #FFF3CD; -fx-background-radius: 8; -fx-border-color: #FFC107; -fx-border-radius: 8; -fx-padding: 15;">
+            <Label text="💡 Oracle Server Backup" style="-fx-font-size: 16; -fx-text-fill: #856404; -fx-font-weight: bold;"/>
+            <Label text="Oracle backups are managed automatically using:" style="-fx-text-fill: #856404;"/>
+            <VBox style="-fx-padding: 10 0 0 15;">
+                <Label text="• RMAN (Recovery Manager) - Daily incremental backups" style="-fx-text-fill: #856404; -fx-font-size: 12;"/>
+                <Label text="• Data Pump Export - Weekly full exports" style="-fx-text-fill: #856404; -fx-font-size: 12;"/>
+                <Label text="• Archived redo logs - Point-in-time recovery" style="-fx-text-fill: #856404; -fx-font-size: 12;"/>
+            </VBox>
+        </VBox>
+    </VBox>
+</VBox>
