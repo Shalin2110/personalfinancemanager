@@ -1,3 +1,4 @@
+// My SyncLogDao
 package com.example.dao;
 
 import com.example.db.OracleConnection;
@@ -5,6 +6,7 @@ import com.example.model.SyncLog;
 import com.example.db.SQLiteConnection;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -32,13 +34,26 @@ public class SyncLogDao {
                     return null;
                 }
 
+                // Special handling for date-only strings (without time)
+                if (timestampStr.matches("\\d{4}-\\d{2}-\\d{2}")) {
+                    try {
+                        LocalDate localDate = LocalDate.parse(timestampStr);
+                        return localDate.atStartOfDay(); // Convert to LocalDateTime at start of day
+                    } catch (DateTimeParseException e) {
+                        // Continue to other fallbacks
+                    }
+                }
+
                 // Try common SQLite timestamp formats
                 DateTimeFormatter[] formatters = {
                         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"),
                         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"),
                         DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"),
                         DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS"),
-                        DateTimeFormatter.ISO_LOCAL_DATE_TIME
+                        DateTimeFormatter.ISO_LOCAL_DATE_TIME,
+                        // ADDED DATE-ONLY FORMATTERS:
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd"),
+                        DateTimeFormatter.ISO_LOCAL_DATE
                 };
 
                 for (DateTimeFormatter formatter : formatters) {
@@ -156,7 +171,7 @@ public class SyncLogDao {
     }
 
     // Apply the same safe approach to other methods
-    private SyncLog getLogByTxnId(String txnId) throws SQLException {
+    public SyncLog getLogByTxnId(String txnId) throws SQLException {
         String sql = "SELECT * FROM sync_log WHERE device_txn_id = ?";
 
         try (Connection conn = SQLiteConnection.getConnection();
@@ -340,7 +355,13 @@ public class SyncLogDao {
                     syncCs.setString(2, rs.getString("username"));
                     syncCs.setString(3, rs.getString("password_hash"));
                     syncCs.setString(4, rs.getString("email"));
-                    syncCs.setTimestamp(5, rs.getTimestamp("created_at"));
+                    Object createdAtObj = rs.getObject("created_at");
+                    LocalDateTime createdAt = safeParseTimestamp(createdAtObj);
+                    if (createdAt != null) {
+                        syncCs.setTimestamp(5, Timestamp.valueOf(createdAt));
+                    } else {
+                        syncCs.setNull(5, java.sql.Types.TIMESTAMP);
+                    }
                     syncCs.setInt(6, rs.getInt("delete_flag"));
 
                     syncCs.execute();
@@ -480,7 +501,13 @@ public class SyncLogDao {
                     syncCs.setInt(5, rs.getInt("category_id"));
                     syncCs.setDouble(6, rs.getDouble("amount"));
                     syncCs.setString(7, rs.getString("currency"));
-                    syncCs.setDate(8, rs.getDate("date"));
+                    Object dateObj = rs.getObject("date");
+                    LocalDateTime date = safeParseTimestamp(dateObj);
+                    if (date != null) {
+                        syncCs.setDate(8, java.sql.Date.valueOf(date.toLocalDate()));
+                    } else {
+                        syncCs.setNull(8, java.sql.Types.DATE);
+                    }
                     syncCs.setString(9, rs.getString("description"));
                     syncCs.setInt(10, rs.getInt("recurring_flag"));
                     syncCs.setString(11, rs.getString("sync_status"));
@@ -531,8 +558,27 @@ public class SyncLogDao {
                     syncCs.setInt(1, rs.getInt("budget_id"));
                     syncCs.setInt(2, rs.getInt("user_id"));
                     syncCs.setInt(3, rs.getInt("category_id"));
-                    syncCs.setDate(4, rs.getDate("start_date"));
-                    syncCs.setDate(5, rs.getDate("end_date"));
+
+                    // FIX: Use safe timestamp parsing for dates
+                    Object startDateObj = rs.getObject("start_date");
+                    Object endDateObj = rs.getObject("end_date");
+
+                    LocalDateTime startDate = safeParseTimestamp(startDateObj);
+                    LocalDateTime endDate = safeParseTimestamp(endDateObj);
+
+                    // Convert to java.sql.Date for the stored procedure
+                    if (startDate != null) {
+                        syncCs.setDate(4, java.sql.Date.valueOf(startDate.toLocalDate()));
+                    } else {
+                        syncCs.setNull(4, java.sql.Types.DATE);
+                    }
+
+                    if (endDate != null) {
+                        syncCs.setDate(5, java.sql.Date.valueOf(endDate.toLocalDate()));
+                    } else {
+                        syncCs.setNull(5, java.sql.Types.DATE);
+                    }
+
                     syncCs.setDouble(6, rs.getDouble("amount"));
                     syncCs.setDouble(7, rs.getDouble("alert_threshold_pct"));
                     syncCs.setInt(8, rs.getInt("delete_flag"));
@@ -553,6 +599,7 @@ public class SyncLogDao {
         return false;
     }
 
+    // FIXED: Sync savings goal record to Oracle - device_txn_id is goal_id
     // FIXED: Sync savings goal record to Oracle - device_txn_id is goal_id
     private boolean syncSavingsGoalRecord(String deviceTxnId) {
         String getSql = "SELECT * FROM savings_goal WHERE goal_id = ?";
@@ -577,20 +624,24 @@ public class SyncLogDao {
                     syncCs.setDouble(4, rs.getDouble("target_amount"));
                     syncCs.setDouble(5, rs.getDouble("current_amount"));
 
-                    // Handle nullable start_date
-                    Date startDate = rs.getDate("start_date");
-                    if (rs.wasNull()) {
-                        syncCs.setNull(6, java.sql.Types.DATE);
+                    // FIX: Use safe timestamp parsing for dates
+                    Object startDateObj = rs.getObject("start_date");
+                    Object targetDateObj = rs.getObject("target_date");
+
+                    LocalDateTime startDate = safeParseTimestamp(startDateObj);
+                    LocalDateTime targetDate = safeParseTimestamp(targetDateObj);
+
+                    // Convert to java.sql.Date for the stored procedure
+                    if (startDate != null) {
+                        syncCs.setDate(6, java.sql.Date.valueOf(startDate.toLocalDate()));
                     } else {
-                        syncCs.setDate(6, startDate);
+                        syncCs.setNull(6, java.sql.Types.DATE);
                     }
 
-                    // Handle nullable target_date
-                    Date targetDate = rs.getDate("target_date");
-                    if (rs.wasNull()) {
-                        syncCs.setNull(7, java.sql.Types.DATE);
+                    if (targetDate != null) {
+                        syncCs.setDate(7, java.sql.Date.valueOf(targetDate.toLocalDate()));
                     } else {
-                        syncCs.setDate(7, targetDate);
+                        syncCs.setNull(7, java.sql.Types.DATE);
                     }
 
                     syncCs.setString(8, rs.getString("status"));

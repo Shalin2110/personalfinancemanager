@@ -1,3 +1,4 @@
+// BudgetDao
 package com.example.dao;
 
 import com.example.model.Budget;
@@ -39,9 +40,9 @@ public class BudgetDao {
                     txnId = newTxnId; // Update local reference
                 }
             }
-
             syncToOracle(budget);
             SyncManager.markSuccess(txnId);
+
         } catch (Exception e) {
             SyncManager.markFailure(txnId, e.getMessage());
             throw new SQLException("Add budget failed: " + e.getMessage());
@@ -166,20 +167,21 @@ public class BudgetDao {
         }
     }
 
-    // Oracle Sync Logic
+    // Oracle Sync Logic - FIXED: Now with 8 parameters to match PL/SQL procedure
     private void syncToOracle(Budget budget) throws SQLException {
-        // Use stored procedure for insert/update
-        String sql = "{ call system.proc_sync_budget(?, ?, ?, ?, ?, ?, ?) }";
+        // Use stored procedure for insert/update - NOW WITH 8 PARAMETERS
+        String sql = "{ call system.proc_sync_budget(?, ?, ?, ?, ?, ?, ?, ?) }";
         try (Connection conn = OracleConnection.getConnection();
              CallableStatement cs = conn.prepareCall(sql)) {
 
             cs.setInt(1, budget.getBudgetId());
             cs.setInt(2, budget.getUserId());
             cs.setInt(3, budget.getCategoryId());
-            cs.setDouble(4, budget.getAmount());
-            cs.setDate(5, budget.getStartDate() != null ? Date.valueOf(budget.getStartDate()) : null);
-            cs.setDate(6, budget.getEndDate() != null ? Date.valueOf(budget.getEndDate()) : null);
-            cs.setInt(7, budget.isDeleteFlag() ? 1 : 0);
+            cs.setDate(4, budget.getStartDate() != null ? Date.valueOf(budget.getStartDate()) : null);
+            cs.setDate(5, budget.getEndDate() != null ? Date.valueOf(budget.getEndDate()) : null);
+            cs.setDouble(6, budget.getAmount());
+            cs.setDouble(7, 0.0); // p_alert_pct - default value since it's not in Budget model
+            cs.setInt(8, budget.isDeleteFlag() ? 1 : 0);
 
             cs.execute();
         }
