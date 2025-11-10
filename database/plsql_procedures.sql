@@ -231,7 +231,6 @@ END proc_sync_savings_goal;
 
 // Sync Log Sync Procedure
 CREATE OR REPLACE PROCEDURE proc_sync_sync_log (
-    p_sync_id       IN NUMBER,
     p_device_txn_id IN VARCHAR2,
     p_table_name    IN VARCHAR2,
     p_status        IN VARCHAR2,
@@ -241,20 +240,20 @@ CREATE OR REPLACE PROCEDURE proc_sync_sync_log (
 AS
 BEGIN
     MERGE INTO sync_log_central t
-    USING (SELECT p_sync_id AS sync_id FROM dual) s
-    ON (t.sync_id = s.sync_id)
+    USING (SELECT p_device_txn_id AS device_txn_id FROM dual) s
+    ON (t.device_txn_id = s.device_txn_id)
     WHEN MATCHED THEN
         UPDATE SET
-            t.device_txn_id = p_device_txn_id,
-            t.table_name    = p_table_name,
-            t.status        = p_status,
-            t.last_attempt  = NVL(p_last_attempt, t.last_attempt),
-            t.retries       = NVL(p_retries, t.retries)
+            t.table_name   = p_table_name,
+            t.status       = p_status,
+            t.last_attempt = NVL(p_last_attempt, t.last_attempt),
+            t.retries      = p_retries
     WHEN NOT MATCHED THEN
-        INSERT (sync_id, device_txn_id, table_name, status, last_attempt, retries)
-        VALUES (p_sync_id, p_device_txn_id, p_table_name, p_status, p_last_attempt, p_retries);
+        INSERT (device_txn_id, table_name, status, last_attempt, retries)
+        VALUES (p_device_txn_id, p_table_name, p_status, p_last_attempt, p_retries);
 
     COMMIT;
 END proc_sync_sync_log;
 /
+
 

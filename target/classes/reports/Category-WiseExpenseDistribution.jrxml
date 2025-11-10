@@ -2,6 +2,7 @@
 <jasperReport name="Category-WiseExpenseDistribution" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="605264be-fd57-4ae7-9bab-c3b6350f74eb">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Oracle_Central"/>
+	<parameter name="USER_ID" class="java.lang.Integer"/>
 	<query language="SQL"><![CDATA[SELECT
     c.name AS category,
     SUM(e.amount) AS total_spent
@@ -11,6 +12,7 @@ JOIN category_central c
 WHERE e.delete_flag = 0
   AND c.delete_flag = 0
   AND c.type = 'EXPENSE'
+  AND e.user_id = $P{USER_ID}
 GROUP BY c.name
 ORDER BY total_spent DESC
 ]]></query>
@@ -62,9 +64,9 @@ ORDER BY total_spent DESC
 		</band>
 	</detail>
 	<columnFooter height="45" splitType="Stretch"/>
-	<pageFooter height="54" splitType="Stretch"/>
-	<summary height="214" splitType="Stretch">
-		<element kind="chart" chartType="pie3D" uuid="c78e5496-74bf-4381-b23e-1397d26b79fa" x="80" y="7" width="400" height="200" evaluationTime="Report">
+	<pageFooter height="48" splitType="Stretch"/>
+	<summary height="223" splitType="Stretch">
+		<element kind="chart" chartType="pie3D" uuid="239c8a06-1573-4566-a316-c80f2b5ccd60" x="80" y="10" width="400" height="200" evaluationTime="Report">
 			<dataset kind="pie">
 				<series>
 					<keyExpression><![CDATA[$F{CATEGORY}]]></keyExpression>

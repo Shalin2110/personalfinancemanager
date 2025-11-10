@@ -3,69 +3,92 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.example.controller.ReportController">
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.controller.ReportController"
+      spacing="20" style="-fx-padding: 20; -fx-background-color: #F8F9FA;">
 
-    <top>
-        <Label text="Financial Reports"
-               style="-fx-font-size: 20; -fx-font-weight: bold; -fx-padding: 15;"
-               BorderPane.alignment="CENTER"/>
-    </top>
+    <!-- Header Section -->
+    <VBox spacing="8" style="-fx-padding: 0 0 10 0;">
+        <Label text="📈 Financial Reports" style="-fx-font-size: 24; -fx-text-fill: #2C3E50; -fx-font-weight: bold;"/>
+        <Label text="Generate detailed financial analysis and insights" style="-fx-font-size: 14; -fx-text-fill: #7F8C8D;"/>
+    </VBox>
 
-    <center>
-        <VBox spacing="20" alignment="CENTER" style="-fx-padding: 25;">
+    <!-- Scrollable Reports Area -->
+    <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-padding: 0;">
+        <VBox spacing="20" style="-fx-padding: 10;">
 
-            <!-- Monthly Expenditure -->
-            <VBox alignment="CENTER" spacing="6">
-                <Button text="Monthly Expenditure Analysis"
-                        onAction="#handleMonthlyExpenditureReport"
-                        prefWidth="320"/>
-                <Button text="Save as PDF"
-                        onAction="#handleSaveMonthlyExpenditurePDF"
-                        prefWidth="200"/>
-            </VBox>
+            <!-- Reports Grid - More compact layout -->
+            <GridPane hgap="15" vgap="15" style="-fx-padding: 5;">
+                <columnConstraints>
+                    <ColumnConstraints prefWidth="320" halignment="CENTER"/>
+                    <ColumnConstraints prefWidth="320" halignment="CENTER"/>
+                </columnConstraints>
 
-            <!-- Budget Adherence -->
-            <VBox alignment="CENTER" spacing="6">
-                <Button text="Budget Adherence Report"
-                        onAction="#handleBudgetAdherenceReport"
-                        prefWidth="320"/>
-                <Button text="Save as PDF"
-                        onAction="#handleSaveBudgetAdherencePDF"
-                        prefWidth="200"/>
-            </VBox>
+                <rowConstraints>
+                    <RowConstraints prefHeight="180"/>
+                    <RowConstraints prefHeight="180"/>
+                    <RowConstraints prefHeight="140"/>
+                </rowConstraints>
 
-            <!-- Savings Goal Progress -->
-            <VBox alignment="CENTER" spacing="6">
-                <Button text="Savings Goal Progress"
-                        onAction="#handleSavingsGoalProgressReport"
-                        prefWidth="320"/>
-                <Button text="Save as PDF"
-                        onAction="#handleSaveSavingsGoalProgressPDF"
-                        prefWidth="200"/>
-            </VBox>
+                <!-- Row 1 -->
+                <VBox spacing="8" style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 8, 0, 0, 2); -fx-padding: 20;" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                    <Label text="📊 Monthly Expenditure" style="-fx-font-size: 15; -fx-text-fill: #2C3E50; -fx-font-weight: bold;"/>
+                    <Label text="Analyze monthly spending patterns" style="-fx-text-fill: #7F8C8D; -fx-font-size: 12; -fx-wrap-text: true;"/>
+                    <VBox spacing="6" style="-fx-padding: 12 0 0 0;">
+                        <Button text="View Report" onAction="#handleMonthlyExpenditureReport"
+                                style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 6 12; -fx-min-width: 120;"/>
+                        <Button text="Save as PDF" onAction="#handleSaveMonthlyExpenditurePDF"
+                                style="-fx-background-color: #FF9800; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 6 12; -fx-min-width: 120;"/>
+                    </VBox>
+                </VBox>
 
-            <!-- Category Expense Distribution -->
-            <VBox alignment="CENTER" spacing="6">
-                <Button text="Category-wise Expense Distribution"
-                        onAction="#handleCategoryExpenseDistributionReport"
-                        prefWidth="320"/>
-                <Button text="Save as PDF"
-                        onAction="#handleSaveCategoryExpenseDistributionPDF"
-                        prefWidth="200"/>
-            </VBox>
+                <VBox spacing="8" style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 8, 0, 0, 2); -fx-padding: 20;" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                    <Label text="💰 Budget Adherence" style="-fx-font-size: 15; -fx-text-fill: #2C3E50; -fx-font-weight: bold;"/>
+                    <Label text="Track budget compliance" style="-fx-text-fill: #7F8C8D; -fx-font-size: 12; -fx-wrap-text: true;"/>
+                    <VBox spacing="6" style="-fx-padding: 12 0 0 0;">
+                        <Button text="View Report" onAction="#handleBudgetAdherenceReport"
+                                style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 6 12; -fx-min-width: 120;"/>
+                        <Button text="Save as PDF" onAction="#handleSaveBudgetAdherencePDF"
+                                style="-fx-background-color: #FF9800; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 6 12; -fx-min-width: 120;"/>
+                    </VBox>
+                </VBox>
 
-            <!-- Forecasted Savings Trends -->
-            <VBox alignment="CENTER" spacing="6">
-                <Button text="Forecasted Saving Trends"
-                        onAction="#handleForecastSavingsReport"
-                        prefWidth="320"/>
-                <Button text="Save as PDF"
-                        onAction="#handleSaveForecastSavingsPDF"
-                        prefWidth="200"/>
-            </VBox>
+                <!-- Row 2 -->
+                <VBox spacing="8" style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 8, 0, 0, 2); -fx-padding: 20;" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                    <Label text="🎯 Savings Progress" style="-fx-font-size: 15; -fx-text-fill: #2C3E50; -fx-font-weight: bold;"/>
+                    <Label text="Monitor goal achievements" style="-fx-text-fill: #7F8C8D; -fx-font-size: 12; -fx-wrap-text: true;"/>
+                    <VBox spacing="6" style="-fx-padding: 12 0 0 0;">
+                        <Button text="View Report" onAction="#handleSavingsGoalProgressReport"
+                                style="-fx-background-color: #9C27B0; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 6 12; -fx-min-width: 120;"/>
+                        <Button text="Save as PDF" onAction="#handleSaveSavingsGoalProgressPDF"
+                                style="-fx-background-color: #FF9800; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 6 12; -fx-min-width: 120;"/>
+                    </VBox>
+                </VBox>
+
+                <VBox spacing="8" style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 8, 0, 0, 2); -fx-padding: 20;" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                    <Label text="📋 Category Analysis" style="-fx-font-size: 15; -fx-text-fill: #2C3E50; -fx-font-weight: bold;"/>
+                    <Label text="Expense breakdown by category" style="-fx-text-fill: #7F8C8D; -fx-font-size: 12; -fx-wrap-text: true;"/>
+                    <VBox spacing="6" style="-fx-padding: 12 0 0 0;">
+                        <Button text="View Report" onAction="#handleCategoryExpenseDistributionReport"
+                                style="-fx-background-color: #E91E63; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 6 12; -fx-min-width: 120;"/>
+                        <Button text="Save as PDF" onAction="#handleSaveCategoryExpenseDistributionPDF"
+                                style="-fx-background-color: #FF9800; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 6 12; -fx-min-width: 120;"/>
+                    </VBox>
+                </VBox>
+
+                <!-- Row 3 - Forecast Trends (full width but shorter) -->
+                <VBox spacing="8" style="-fx-background-color: white; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.08), 8, 0, 0, 2); -fx-padding: 18;" GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.columnSpan="2">
+                    <Label text="🔮 Forecast Trends" style="-fx-font-size: 15; -fx-text-fill: #2C3E50; -fx-font-weight: bold;"/>
+                    <Label text="Predict future savings and spending patterns" style="-fx-text-fill: #7F8C8D; -fx-font-size: 12;"/>
+                    <HBox spacing="12" alignment="CENTER" style="-fx-padding: 8 0 0 0;">
+                        <Button text="View Report" onAction="#handleForecastSavingsReport"
+                                style="-fx-background-color: #00BCD4; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 6 16;"/>
+                        <Button text="Save as PDF" onAction="#handleSaveForecastSavingsPDF"
+                                style="-fx-background-color: #FF9800; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 6 16;"/>
+                    </HBox>
+                </VBox>
+            </GridPane>
 
         </VBox>
-    </center>
+    </ScrollPane>
 
-</BorderPane>
+</VBox>

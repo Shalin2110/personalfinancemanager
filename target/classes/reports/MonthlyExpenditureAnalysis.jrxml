@@ -2,6 +2,7 @@
 <jasperReport name="MonthlyExpenditureAnalysis" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7a360b62-2156-4bb1-b1a4-964a1e8020db">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Oracle_Central"/>
+	<parameter name="USER_ID" class="java.lang.Integer"/>
 	<query language="SQL"><![CDATA[SELECT month_label,
        category_name,
        total_spent,
@@ -15,6 +16,7 @@ FROM (
     FROM expense_central e
     JOIN category_central c ON e.category_id = c.category_id
     WHERE e.delete_flag = 0
+      AND e.user_id = $P{USER_ID}
     GROUP BY TRUNC(e.expense_date, 'MM'),
              TRIM(TO_CHAR(e.expense_date, 'Month YYYY')),
              c.name
@@ -96,7 +98,7 @@ ORDER BY month_start
 					<valueExpression><![CDATA[$F{TOTAL_SPENT}]]></valueExpression>
 				</series>
 			</dataset>
-			<plot categoryAxisLabelColor="#000000" categoryAxisTickLabelColor="#000000" categoryAxisLineColor="#000000" valueAxisTickLabelColor="#000000" valueAxisLabelColor="#000000" valueAxisLineColor="#000000">
+			<plot>
 				<itemLabel/>
 			</plot>
 		</element>

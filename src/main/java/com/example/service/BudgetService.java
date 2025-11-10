@@ -10,19 +10,23 @@ public class BudgetService {
     private final BudgetDao dao = new BudgetDao();
 
     // Add new budget (SQLite + Oracle handled inside DAO)
-    public void addBudget(Budget b) {
+    public void addBudget(Budget budget) {
         try {
-            dao.addBudget(b);
+            // Set the current user ID before adding
+            budget.setUserId(UserService.getCurrentUserId());
+            dao.addBudget(budget);
             System.out.println("[BudgetService] Budget added successfully.");
         } catch (SQLException e) {
             System.err.println("[BudgetService] Error adding budget: " + e.getMessage());
         }
     }
 
-    // Retrieve all budgets
+    // Retrieve all budgets for current user
     public List<Budget> getAllBudgets() {
         try {
-            return dao.getAllBudgets();
+            int userId = UserService.getCurrentUserId();
+            if (userId == -1) return List.of(); // No user logged in
+            return dao.getBudgetsByUser(userId);
         } catch (SQLException e) {
             System.err.println("[BudgetService] Error fetching budgets: " + e.getMessage());
             return List.of();
@@ -30,9 +34,9 @@ public class BudgetService {
     }
 
     // Update budget
-    public void updateBudget(Budget b) {
+    public void updateBudget(Budget budget) {
         try {
-            dao.updateBudget(b);
+            dao.updateBudget(budget);
             System.out.println("[BudgetService] Budget updated successfully.");
         } catch (SQLException e) {
             System.err.println("[BudgetService] Error updating budget: " + e.getMessage());
@@ -47,5 +51,9 @@ public class BudgetService {
         } catch (SQLException e) {
             System.err.println("[BudgetService] Error deleting budget: " + e.getMessage());
         }
+    }
+
+    public int countBudgets() {
+        return getAllBudgets().size();
     }
 }

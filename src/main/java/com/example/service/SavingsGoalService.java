@@ -10,19 +10,23 @@ public class SavingsGoalService {
     private final SavingsGoalDao dao = new SavingsGoalDao();
 
     // Add new goal (SQLite + Oracle handled inside DAO)
-    public void addGoal(SavingsGoal g) {
+    public void addGoal(SavingsGoal goal) {
         try {
-            dao.addGoal(g);
+            // Set the current user ID before adding
+            goal.setUserId(UserService.getCurrentUserId());
+            dao.addGoal(goal);
             System.out.println("[SavingsGoalService] Savings goal added successfully.");
         } catch (SQLException e) {
             System.err.println("[SavingsGoalService] Error adding goal: " + e.getMessage());
         }
     }
 
-    // Retrieve all goals
+    // Retrieve all goals for current user
     public List<SavingsGoal> getAllGoals() {
         try {
-            return dao.getAllGoals();
+            int userId = UserService.getCurrentUserId();
+            if (userId == -1) return List.of(); // No user logged in
+            return dao.getGoalsByUser(userId);
         } catch (SQLException e) {
             System.err.println("[SavingsGoalService] Error reading goals: " + e.getMessage());
             return List.of();
@@ -30,9 +34,9 @@ public class SavingsGoalService {
     }
 
     // Update goal
-    public void updateGoal(SavingsGoal g) {
+    public void updateGoal(SavingsGoal goal) {
         try {
-            dao.updateGoal(g);
+            dao.updateGoal(goal);
             System.out.println("[SavingsGoalService] Savings goal updated successfully.");
         } catch (SQLException e) {
             System.err.println("[SavingsGoalService] Error updating goal: " + e.getMessage());
@@ -47,5 +51,9 @@ public class SavingsGoalService {
         } catch (SQLException e) {
             System.err.println("[SavingsGoalService] Error deleting goal: " + e.getMessage());
         }
+    }
+
+    public int countGoals() {
+        return getAllGoals().size();
     }
 }

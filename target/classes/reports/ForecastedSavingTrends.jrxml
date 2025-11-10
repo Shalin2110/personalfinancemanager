@@ -2,6 +2,7 @@
 <jasperReport name="ForecastedSavingTrends" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8f846dbb-4842-443c-97be-b1d2a66f109c">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Oracle_Central"/>
+	<parameter name="USER_ID" class="java.lang.Integer"/>
 	<query language="SQL"><![CDATA[SELECT
     month_label,
     SUM(total_income) AS total_income,
@@ -18,6 +19,7 @@ FROM (
     WHERE e.delete_flag = 0
       AND c.delete_flag = 0
       AND c.type = 'EXPENSE'
+      AND e.user_id = $P{USER_ID}
     GROUP BY TO_CHAR(e.expense_date, 'Mon YYYY')
 
     UNION ALL
@@ -32,6 +34,7 @@ FROM (
     WHERE e.delete_flag = 0
       AND c.delete_flag = 0
       AND c.type = 'INCOME'
+      AND e.user_id = $P{USER_ID}
     GROUP BY TO_CHAR(e.expense_date, 'Mon YYYY')
 )
 GROUP BY month_label

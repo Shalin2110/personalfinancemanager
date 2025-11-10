@@ -1,7 +1,8 @@
 <!-- Created with Jaspersoft Studio version 7.0.3.final using JasperReports Library version 7.0.3-41034ca841d452f3305ba55b9042260aaa1ab5dd  -->
-<jasperReport name="BudgetAdherenceTracking" language="java" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="58cfdc51-1fda-4ea7-b430-ee73cf3eaacd">
+<jasperReport name="BudgetAdherenceTracking" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="58cfdc51-1fda-4ea7-b430-ee73cf3eaacd">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Oracle_Central"/>
+	<parameter name="USER_ID" class="java.lang.Integer"/>
 	<query language="SQL"><![CDATA[SELECT
     c.name              AS category,
     b.start_date        AS startdate,
@@ -24,12 +25,15 @@ LEFT JOIN (
       ON e.category_id = b2.category_id
      AND e.expense_date BETWEEN b2.start_date AND b2.end_date
      AND e.delete_flag = 0
+     AND e.user_id = $P{USER_ID}
     WHERE b2.delete_flag = 0
+      AND b2.user_id = $P{USER_ID}
     GROUP BY b2.budget_id
 ) es
   ON es.budget_id = b.budget_id
 WHERE b.delete_flag = 0
   AND c.type = 'EXPENSE'
+  AND b.user_id = $P{USER_ID}
 ORDER BY b.start_date DESC
 ]]></query>
 	<field name="CATEGORY" class="java.lang.String">

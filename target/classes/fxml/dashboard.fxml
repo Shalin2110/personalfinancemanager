@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.paint.Color?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.controller.DashboardController">
+
+    <!-- Header with gradient and shadow -->
+    <top>
+        <VBox style="-fx-background-color: linear-gradient(to right, #667eea, #764ba2); -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 4);">
+            <HBox spacing="15" style="-fx-padding: 20; -fx-alignment: center-left;">
+                <Label text="💰 Personal Finance Manager" style="-fx-text-fill: white; -fx-font-size: 24; -fx-font-weight: bold;" />
+                <Pane HBox.hgrow="ALWAYS"/>
+                <VBox alignment="CENTER_RIGHT" spacing="2">
+                    <Label text="Connection" style="-fx-text-fill: #E3F2FD; -fx-font-size: 12;"/>
+                    <HBox spacing="5" alignment="CENTER_RIGHT">
+                        <Label fx:id="lblConnectionStatus" text="Checking..."
+                               style="-fx-text-fill: white; -fx-font-size: 14; -fx-font-weight: bold;"/>
+                        <!-- Visual indicator -->
+                        <Circle fx:id="connectionIndicator" radius="5" fill="gray"/>
+                    </HBox>
+                </VBox>
+                <Button text="🚪 Logout" onAction="#handleLogout"
+                        style="-fx-background-color: #E53935; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 8 15;"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- Modern Sidebar Navigation with ScrollPane -->
+    <left>
+        <ScrollPane fitToWidth="true" style="-fx-background-color: #2C3E50; -fx-border-width: 0; -fx-padding: 0;">
+            <VBox spacing="6" style="-fx-background-color: #2C3E50; -fx-padding: 15; -fx-min-width: 200; -fx-pref-width: 200;">
+                <Label text="NAVIGATION" style="-fx-text-fill: #BDC3C7; -fx-font-size: 11; -fx-font-weight: bold; -fx-padding: 0 0 10 0;"/>
+
+                <Button text="📊 Dashboard" fx:id="btnDashboard" onAction="#openDashboard"
+                        style="-fx-background-color: transparent; -fx-text-fill: #ECF0F1; -fx-font-size: 13; -fx-font-weight: bold; -fx-padding: 10 12; -fx-background-radius: 6; -fx-alignment: center-left; -fx-max-width: Infinity;"/>
+                <Button text="💰 Budgets" fx:id="btnBudgets" onAction="#openBudgets"
+                        style="-fx-background-color: transparent; -fx-text-fill: #ECF0F1; -fx-font-size: 13; -fx-font-weight: bold; -fx-padding: 10 12; -fx-background-radius: 6; -fx-alignment: center-left; -fx-max-width: Infinity;"/>
+                <Button text="🎯 Savings Goals" fx:id="btnGoals" onAction="#openGoals"
+                        style="-fx-background-color: transparent; -fx-text-fill: #ECF0F1; -fx-font-size: 13; -fx-font-weight: bold; -fx-padding: 10 12; -fx-background-radius: 6; -fx-alignment: center-left; -fx-max-width: Infinity;"/>
+                <Button text="💸 Expenses" fx:id="btnExpenses" onAction="#openExpenses"
+                        style="-fx-background-color: transparent; -fx-text-fill: #ECF0F1; -fx-font-size: 13; -fx-font-weight: bold; -fx-padding: 10 12; -fx-background-radius: 6; -fx-alignment: center-left; -fx-max-width: Infinity;"/>
+
+                <Separator style="-fx-padding: 5 0 5 0;">
+                    <padding>
+                        <Insets top="5" bottom="5"/>
+                    </padding>
+                </Separator>
+
+                <Label text="SETTINGS" style="-fx-text-fill: #BDC3C7; -fx-font-size: 11; -fx-font-weight: bold; -fx-padding: 0 0 10 0;"/>
+                <Button text="🏦 Accounts" fx:id="btnAccounts" onAction="#openAccounts"
+                        style="-fx-background-color: transparent; -fx-text-fill: #ECF0F1; -fx-font-size: 13; -fx-font-weight: bold; -fx-padding: 10 12; -fx-background-radius: 6; -fx-alignment: center-left; -fx-max-width: Infinity;"/>
+                <Button text="📂 Categories" fx:id="btnCategories" onAction="#openCategories"
+                        style="-fx-background-color: transparent; -fx-text-fill: #ECF0F1; -fx-font-size: 13; -fx-font-weight: bold; -fx-padding: 10 12; -fx-background-radius: 6; -fx-alignment: center-left; -fx-max-width: Infinity;"/>
+                <Button text="🔒 Security and Backup" fx:id="btnBackup" onAction="#openBackup"
+                        style="-fx-background-color: transparent; -fx-text-fill: #ECF0F1; -fx-font-size: 13; -fx-font-weight: bold; -fx-padding: 10 12; -fx-background-radius: 6; -fx-alignment: center-left; -fx-max-width: Infinity;"/>
+
+                <Separator style="-fx-padding: 5 0 5 0;">
+                    <padding>
+                        <Insets top="5" bottom="5"/>
+                    </padding>
+                </Separator>
+
+                <Button text="📈 Reports" fx:id="btnReports" onAction="#openReports"
+                        style="-fx-background-color: transparent; -fx-text-fill: #ECF0F1; -fx-font-size: 13; -fx-font-weight: bold; -fx-padding: 10 12; -fx-background-radius: 6; -fx-alignment: center-left; -fx-max-width: Infinity;"/>
+
+                <Separator style="-fx-padding: 15 0 10 0;">
+                    <padding>
+                        <Insets top="10" bottom="10"/>
+                    </padding>
+                </Separator>
+
+                <Label text="SYNC" style="-fx-text-fill: #BDC3C7; -fx-font-size: 11; -fx-font-weight: bold; -fx-padding: 0 0 10 0;"/>
+                <Button text="🔄 Sync Logs" fx:id="btnSyncLogs" onAction="#openSyncLogs"
+                        style="-fx-background-color: transparent; -fx-text-fill: #ECF0F1; -fx-font-size: 13; -fx-font-weight: bold; -fx-padding: 10 12; -fx-background-radius: 6; -fx-alignment: center-left; -fx-max-width: Infinity;"/>
+                <Button text="🔄 Retry Sync" fx:id="btnRetrySync" onAction="#retrySync"
+                        style="-fx-background-color: #27AE60; -fx-text-fill: white; -fx-font-size: 13; -fx-font-weight: bold; -fx-padding: 10 12; -fx-background-radius: 6; -fx-alignment: center-left; -fx-max-width: Infinity;"/>
+            </VBox>
+        </ScrollPane>
+    </left>
+
+    <!-- Main Content Area -->
+    <center>
+        <StackPane fx:id="contentArea" style="-fx-background-color: #F8F9FA; -fx-padding: 0;">
+            <!-- Default welcome content -->
+            <VBox alignment="CENTER" spacing="20" style="-fx-padding: 40;">
+                <Label text="👋 Welcome to Personal Finance Manager" style="-fx-font-size: 28; -fx-text-fill: #2C3E50; -fx-font-weight: bold;"/>
+                <Label text="Select an option from the sidebar to get started" style="-fx-font-size: 16; -fx-text-fill: #7F8C8D;"/>
+            </VBox>
+        </StackPane>
+    </center>
+
+</BorderPane>

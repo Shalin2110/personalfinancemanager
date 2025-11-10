@@ -9,20 +9,20 @@ public class SavingsGoal {
     private double targetAmount;
     private double currentAmount;
     private LocalDate startDate;
-    private LocalDate endDate;
+    private LocalDate targetDate;
     private boolean deleteFlag;
 
     public SavingsGoal() {}
 
     public SavingsGoal(int userId, int goalId, String name, double targetAmount, double currentAmount,
-                       LocalDate startDate, LocalDate endDate, boolean deleteFlag) {
+                       LocalDate startDate, LocalDate targetDate, boolean deleteFlag) {
         this.userId = userId;
         this.goalId = goalId;
         this.name = name;
         this.targetAmount = targetAmount;
         this.currentAmount = currentAmount;
         this.startDate = startDate;
-        this.endDate = endDate;
+        this.targetDate = targetDate;
         this.deleteFlag = deleteFlag;
     }
 
@@ -49,8 +49,8 @@ public class SavingsGoal {
     public LocalDate getStartDate() { return startDate; }
     public void setStartDate(LocalDate startDate) { this.startDate = startDate; }
 
-    public LocalDate getEndDate() { return endDate; }
-    public void setEndDate(LocalDate endDate) { this.endDate = endDate; }
+    public LocalDate getTargetDate() { return targetDate; }
+    public void setTargetDate(LocalDate targetDate) { this.targetDate = targetDate; }
 
     public boolean isDeleteFlag() { return deleteFlag; }
     public void setDeleteFlag(boolean deleteFlag) { this.deleteFlag = deleteFlag; }

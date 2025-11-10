@@ -1,45 +1,91 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.controller.SavingsGoalController">
+<?import javafx.geometry.Insets?>
 
-    <top>
-        <Label text="Savings Goal Management" style="-fx-font-size: 20; -fx-padding: 10;" />
-    </top>
+<VBox xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.controller.SavingsGoalController"
+      spacing="20" style="-fx-padding: 25; -fx-background-color: #F8F9FA;">
 
-    <center>
-        <VBox spacing="8" alignment="CENTER" style="-fx-padding: 10;">
-            <HBox spacing="8">
-                <Label text="Goal Name:"/>
-                <TextField fx:id="txtName"/>
-                <Label text="Target:"/>
-                <TextField fx:id="txtTarget"/>
-            </HBox>
-            <HBox spacing="8">
-                <Label text="Current:"/>
-                <TextField fx:id="txtCurrent"/>
-                <Label text="Start:"/>
-                <DatePicker fx:id="dpStart"/>
-                <Label text="End:"/>
-                <DatePicker fx:id="dpEnd"/>
-            </HBox>
-            <HBox spacing="10">
-                <Button text="Add" onAction="#addGoal"/>
-                <Button text="Update" onAction="#updateGoal"/>
-                <Button text="Delete" onAction="#deleteGoal"/>
-                <Button text="Refresh" onAction="#loadGoals"/>
-            </HBox>
-            <TableView fx:id="tblGoals" prefHeight="300" prefWidth="700">
-                <columns>
-                    <TableColumn fx:id="colId" text="ID" prefWidth="40"/>
-                    <TableColumn fx:id="colName" text="Name" prefWidth="120"/>
-                    <TableColumn fx:id="colTarget" text="Target" prefWidth="100"/>
-                    <TableColumn fx:id="colCurrent" text="Current" prefWidth="100"/>
-                    <TableColumn fx:id="colProgress" text="Progress %" prefWidth="100"/>
-                    <TableColumn fx:id="colStatus" text="Status" prefWidth="100"/>
-                </columns>
-            </TableView>
-        </VBox>
-    </center>
+    <!-- Header Section -->
+    <VBox spacing="8">
+        <Label text="🎯 Savings Goals" style="-fx-font-size: 28; -fx-text-fill: #2C3E50; -fx-font-weight: bold;"/>
+        <Label text="Track your savings progress and financial targets" style="-fx-font-size: 14; -fx-text-fill: #7F8C8D;"/>
+    </VBox>
 
-</BorderPane>
+    <!-- Input Card -->
+    <VBox style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 2); -fx-padding: 25;">
+        <Label text="Goal Details" style="-fx-font-size: 18; -fx-text-fill: #2C3E50; -fx-font-weight: bold; -fx-padding: 0 0 15 0;"/>
+
+        <GridPane hgap="15" vgap="15">
+            <columnConstraints>
+                <ColumnConstraints prefWidth="80" halignment="RIGHT"/>
+                <ColumnConstraints prefWidth="180"/>
+                <ColumnConstraints prefWidth="80" halignment="RIGHT"/>
+                <ColumnConstraints prefWidth="180"/>
+            </columnConstraints>
+
+            <rowConstraints>
+                <RowConstraints prefHeight="35"/>
+                <RowConstraints prefHeight="35"/>
+            </rowConstraints>
+
+            <!-- Row 1 -->
+            <Label text="Name:" GridPane.rowIndex="0" GridPane.columnIndex="0"
+                   style="-fx-font-weight: bold; -fx-text-fill: #34495E;"/>
+            <TextField fx:id="txtName" prefWidth="180" GridPane.rowIndex="0" GridPane.columnIndex="1"
+                       style="-fx-background-radius: 6;" promptText="Goal name"/>
+
+            <Label text="Target:" GridPane.rowIndex="0" GridPane.columnIndex="2"
+                   style="-fx-font-weight: bold; -fx-text-fill: #34495E;"/>
+            <TextField fx:id="txtTarget" prefWidth="180" GridPane.rowIndex="0" GridPane.columnIndex="3"
+                       style="-fx-background-radius: 6;" promptText="0.00"/>
+
+            <!-- Row 2 -->
+            <Label text="Current:" GridPane.rowIndex="1" GridPane.columnIndex="0"
+                   style="-fx-font-weight: bold; -fx-text-fill: #34495E;"/>
+            <TextField fx:id="txtCurrent" prefWidth="180" GridPane.rowIndex="1" GridPane.columnIndex="1"
+                       style="-fx-background-radius: 6;" promptText="0.00"/>
+
+            <Label text="Start Date:" GridPane.rowIndex="1" GridPane.columnIndex="2"
+                   style="-fx-font-weight: bold; -fx-text-fill: #34495E;"/>
+            <DatePicker fx:id="dpStart" prefWidth="180" GridPane.rowIndex="1" GridPane.columnIndex="3"
+                        style="-fx-background-radius: 6;"/>
+
+            <!-- Row 3 -->
+            <Label text="Target Date:" GridPane.rowIndex="2" GridPane.columnIndex="0"
+                   style="-fx-font-weight: bold; -fx-text-fill: #34495E;"/>
+            <DatePicker fx:id="dpTarget" prefWidth="180" GridPane.rowIndex="2" GridPane.columnIndex="1"
+                        style="-fx-background-radius: 6;"/>
+        </GridPane>
+
+        <!-- Action Buttons -->
+        <HBox spacing="12" alignment="CENTER" style="-fx-padding: 20 0 0 0;">
+            <Button fx:id="btnAdd" onAction="#addOrUpdateGoal" text="➕ Add Goal"
+                    style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 8 16;"/>
+            <Button onAction="#clearForm" text="🔄 Clear"
+                    style="-fx-background-color: #78909C; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 8 16;"/>
+            <Button onAction="#loadGoals" text="📥 Refresh"
+                    style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 8 16;"/>
+        </HBox>
+    </VBox>
+
+    <!-- Goals Table Card -->
+    <VBox style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+        <HBox alignment="CENTER_LEFT" style="-fx-padding: 20 20 15 20; -fx-background-color: #F8F9FA; -fx-background-radius: 12 12 0 0;">
+            <Label text="Your Savings Goals" style="-fx-font-size: 18; -fx-text-fill: #2C3E50; -fx-font-weight: bold;"/>
+        </HBox>
+
+        <TableView fx:id="tblGoals" prefHeight="350" style="-fx-background-radius: 0 0 12 12; -fx-border-width: 0;">
+            <columns>
+                <TableColumn fx:id="colId" prefWidth="50" text="ID" style="-fx-alignment: CENTER;"/>
+                <TableColumn fx:id="colName" prefWidth="140" text="Name" style="-fx-alignment: CENTER_LEFT;"/>
+                <TableColumn fx:id="colTarget" prefWidth="100" text="Target" style="-fx-alignment: CENTER_RIGHT;"/>
+                <TableColumn fx:id="colCurrent" prefWidth="100" text="Current" style="-fx-alignment: CENTER_RIGHT;"/>
+                <TableColumn fx:id="colProgress" prefWidth="100" text="Progress %" style="-fx-alignment: CENTER;"/>
+                <TableColumn fx:id="colStatus" prefWidth="100" text="Status" style="-fx-alignment: CENTER;"/>
+                <TableColumn fx:id="colActions" prefWidth="150" text="Actions" style="-fx-alignment: CENTER;"/>
+            </columns>
+        </TableView>
+    </VBox>
+
+</VBox>

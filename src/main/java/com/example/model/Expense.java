@@ -1,6 +1,5 @@
 package com.example.model;
 
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 
@@ -12,7 +11,7 @@ public class Expense {
     private int categoryId;
     private double amount;
     private String currency;
-    private LocalDate date;
+    private LocalDate expenseDate;
     private String description;
     private int recurringFlag;
     private String syncStatus;
@@ -23,9 +22,16 @@ public class Expense {
     private String categoryName;
     private String accountName;
 
-    public Expense() {}
+    public Expense() {
+        this.syncStatus = "PENDING"; // Default value
+        this.createdAt = new Timestamp(System.currentTimeMillis());
+        this.modifiedAt = new Timestamp(System.currentTimeMillis());
+    }
 
-    public Expense(int expenseId, String deviceTxnId, int userId, int accountId, int categoryId, double amount, String currency, LocalDate date, String description, int recurringFlag, String syncStatus, Timestamp createdAt, Timestamp modifiedAt, boolean deleteFlag) {
+    public Expense(int expenseId, String deviceTxnId, int userId, int accountId, int categoryId,
+                   double amount, String currency, LocalDate expenseDate, String description,
+                   int recurringFlag, String syncStatus, Timestamp createdAt, Timestamp modifiedAt,
+                   boolean deleteFlag) {
         this.expenseId = expenseId;
         this.deviceTxnId = deviceTxnId;
         this.userId = userId;
@@ -33,12 +39,12 @@ public class Expense {
         this.categoryId = categoryId;
         this.amount = amount;
         this.currency = currency;
-        this.date = date;
+        this.expenseDate = expenseDate;
         this.description = description;
         this.recurringFlag = recurringFlag;
-        this.syncStatus = syncStatus;
-        this.createdAt = createdAt;
-        this.modifiedAt = modifiedAt;
+        this.syncStatus = syncStatus != null ? syncStatus : "PENDING";
+        this.createdAt = createdAt != null ? createdAt : new Timestamp(System.currentTimeMillis());
+        this.modifiedAt = modifiedAt != null ? modifiedAt : new Timestamp(System.currentTimeMillis());
         this.deleteFlag = deleteFlag;
     }
 
@@ -98,12 +104,12 @@ public class Expense {
         this.currency = currency;
     }
 
-    public LocalDate getDate() {
-        return date;
+    public LocalDate getExpenseDate() {
+        return expenseDate;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
+    public void setExpenseDate(LocalDate expenseDate) {
+        this.expenseDate = expenseDate;
     }
 
     public String getDescription() {
