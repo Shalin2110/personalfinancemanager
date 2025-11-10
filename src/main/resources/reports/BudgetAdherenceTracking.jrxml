@@ -13,15 +13,15 @@
       COALESCE(es.actualspent, 0) * 100.0 / NULLIF(b.amount, 0),
       2
     ) AS adherencepercent
-FROM budget_central b
-JOIN category_central c
+FROM system.budget_central b
+JOIN system.category_central c
   ON b.category_id = c.category_id
 LEFT JOIN (
     SELECT
         b2.budget_id,
         SUM(e.amount) AS actualspent
-    FROM budget_central b2
-    LEFT JOIN expense_central e
+    FROM system.budget_central b2
+    LEFT JOIN system.expense_central e
       ON e.category_id = b2.category_id
      AND e.expense_date BETWEEN b2.start_date AND b2.end_date
      AND e.delete_flag = 0

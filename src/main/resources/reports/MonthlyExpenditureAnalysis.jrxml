@@ -3,33 +3,25 @@
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Oracle_Central"/>
 	<parameter name="USER_ID" class="java.lang.Integer"/>
-	<query language="SQL"><![CDATA[SELECT month_label,
-       category_name,
-       total_spent,
-       month_start
+	<query language="SQL"><![CDATA[SELECT 
+    TO_CHAR(month_start, 'Month YYYY') AS month_label,
+    total_spent,
+    month_start
 FROM (
     SELECT 
         TRUNC(e.expense_date, 'MM') AS month_start,
-        TRIM(TO_CHAR(e.expense_date, 'Month YYYY')) AS month_label,
-        c.name AS category_name,
         SUM(e.amount) AS total_spent
-    FROM expense_central e
-    JOIN category_central c ON e.category_id = c.category_id
+    FROM system.expense_central e
+    JOIN system.category_central c ON e.category_id = c.category_id
     WHERE e.delete_flag = 0
       AND e.user_id = $P{USER_ID}
-    GROUP BY TRUNC(e.expense_date, 'MM'),
-             TRIM(TO_CHAR(e.expense_date, 'Month YYYY')),
-             c.name
+      AND c.type = 'EXPENSE'
+    GROUP BY TRUNC(e.expense_date, 'MM')
 )
-ORDER BY month_start
-]]></query>
+ORDER BY month_start]]></query>
 	<field name="MONTH_LABEL" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="MONTH_LABEL"/>
 		<property name="com.jaspersoft.studio.field.label" value="MONTH_LABEL"/>
-	</field>
-	<field name="CATEGORY_NAME" class="java.lang.String">
-		<property name="com.jaspersoft.studio.field.name" value="CATEGORY_NAME"/>
-		<property name="com.jaspersoft.studio.field.label" value="CATEGORY_NAME"/>
 	</field>
 	<field name="TOTAL_SPENT" class="java.math.BigDecimal">
 		<property name="com.jaspersoft.studio.field.name" value="TOTAL_SPENT"/>
@@ -56,43 +48,35 @@ ORDER BY month_start
 	</pageHeader>
 	<columnHeader height="61" splitType="Stretch">
 		<element kind="rectangle" uuid="33776629-fb0b-496a-b8a2-cf2b7c0bc256" mode="Transparent" x="0" y="6" width="550" height="51"/>
-		<element kind="staticText" uuid="f77f77ed-0004-4b77-8abb-6d864cf599e4" x="10" y="15" width="175" height="30" bold="true" hTextAlign="Center" vTextAlign="Middle">
+		<element kind="staticText" uuid="12cbc3ad-981e-4ca9-a2a0-1fd5fd4d9dce" x="0" y="16" width="278" height="30" hTextAlign="Center" vTextAlign="Middle">
 			<text><![CDATA[Expenditure Month]]></text>
-			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ebfc3f01-23d4-4ac8-9934-799d1ea0a287"/>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="dfa4b807-cfae-4382-8578-2d46a15bce5a"/>
 		</element>
-		<element kind="staticText" uuid="23923af5-08fb-4319-bc31-5b52bd487d93" x="185" y="15" width="185" height="30" bold="true" hTextAlign="Center" vTextAlign="Middle">
-			<text><![CDATA[Category Spent On]]></text>
-			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="eada5e93-d4fe-45d8-8b42-bca743939fe7"/>
-		</element>
-		<element kind="staticText" uuid="bdce38d3-ffa7-43fd-b9e0-8215f04f32ab" x="370" y="15" width="175" height="30" bold="true" hTextAlign="Center" vTextAlign="Middle">
-			<text><![CDATA[Total Amount Spent]]></text>
-			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="c3a7b9b9-d7ae-4715-b47c-a380031c1bcb"/>
+		<element kind="staticText" uuid="4ec2d3e9-a601-4764-81f5-fba72f7a5f4e" x="278" y="16" width="277" height="30" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Total Spent per Month]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="2a869a17-017b-41f9-b825-6adb4c6981fe"/>
 		</element>
 	</columnHeader>
 	<detail>
 		<band height="50" splitType="Stretch">
-			<element kind="textField" uuid="79fd14ad-7200-4f98-aafc-3d3539c7a0b1" x="10" y="10" width="175" height="30" hTextAlign="Center">
-				<expression><![CDATA[$F{MONTH_LABEL}]]></expression>
-				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ebfc3f01-23d4-4ac8-9934-799d1ea0a287"/>
-			</element>
-			<element kind="textField" uuid="18cf8427-1265-4581-901f-3295267c5de8" x="185" y="10" width="185" height="30" hTextAlign="Center">
-				<expression><![CDATA[$F{CATEGORY_NAME}]]></expression>
-				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="eada5e93-d4fe-45d8-8b42-bca743939fe7"/>
-			</element>
-			<element kind="textField" uuid="f903c583-3726-46fd-8d3a-4267de15eb6e" x="370" y="10" width="175" height="30" hTextAlign="Center">
-				<expression><![CDATA[$F{TOTAL_SPENT}]]></expression>
-				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="c3a7b9b9-d7ae-4715-b47c-a380031c1bcb"/>
-			</element>
 			<element kind="line" uuid="9023def0-53d8-4b17-b924-7d41fa66ed42" x="0" y="45" width="550" height="1"/>
+			<element kind="textField" uuid="2fae31e3-0b28-49d6-8ce0-622082a03d9f" x="0" y="11" width="278" height="30" hTextAlign="Center">
+				<expression><![CDATA[$F{MONTH_LABEL}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="dfa4b807-cfae-4382-8578-2d46a15bce5a"/>
+			</element>
+			<element kind="textField" uuid="5f16d90a-b0bb-4877-88ae-4d89c0cedf9d" x="278" y="11" width="277" height="30" hTextAlign="Center">
+				<expression><![CDATA[$F{TOTAL_SPENT}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="2a869a17-017b-41f9-b825-6adb4c6981fe"/>
+			</element>
 		</band>
 	</detail>
 	<columnFooter height="50" splitType="Stretch"/>
 	<pageFooter height="54" splitType="Stretch"/>
 	<summary height="216" splitType="Stretch">
-		<element kind="chart" chartType="stackedBar3D" uuid="7aca9274-fa7d-42f8-8bb1-16aec0feda46" x="10" y="20" width="535" height="179" evaluationTime="Report">
+		<element kind="chart" chartType="stackedBar3D" uuid="d8af163e-d750-423c-8db1-1287d3d617ee" x="10" y="20" width="535" height="179" evaluationTime="Report">
 			<dataset kind="category">
 				<series>
-					<seriesExpression><![CDATA[$F{CATEGORY_NAME}]]></seriesExpression>
+					<seriesExpression><![CDATA[$F{MONTH_LABEL}]]></seriesExpression>
 					<categoryExpression><![CDATA[new java.text.SimpleDateFormat("MMMM").format($F{MONTH_START})
 ]]></categoryExpression>
 					<valueExpression><![CDATA[$F{TOTAL_SPENT}]]></valueExpression>

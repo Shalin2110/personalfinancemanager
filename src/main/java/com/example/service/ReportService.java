@@ -2,6 +2,8 @@ package com.example.service;
 
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.view.JasperViewer;
+
+import java.io.InputStream;
 import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
@@ -10,20 +12,33 @@ import java.io.File;
 public class ReportService {
 
     private JasperPrint showReport(String jrxmlPath, Connection conn, int userId) throws JRException {
-        JasperReport report = JasperCompileManager.compileReport(
-                getClass().getResourceAsStream("/reports/" + jrxmlPath)
-        );
+        try {
+            // Check if resource exists
+            String resourcePath = "/reports/" + jrxmlPath;
+            InputStream reportStream = getClass().getResourceAsStream(resourcePath);
 
-        Map<String, Object> params = new HashMap<>();
-        params.put("USER_ID", userId);
+            if (reportStream == null) {
+                throw new JRException("Report file not found: " + resourcePath);
+            }
 
-        JasperPrint print = JasperFillManager.fillReport(report, params, conn);
+            JasperReport report = JasperCompileManager.compileReport(reportStream);
 
-        if (print.getPages() != null && !print.getPages().isEmpty()) {
-            JasperViewer.viewReport(print, false);
+            Map<String, Object> params = new HashMap<>();
+            params.put("USER_ID", userId);
+
+            JasperPrint print = JasperFillManager.fillReport(report, params, conn);
+
+            if (print.getPages() != null && !print.getPages().isEmpty()) {
+                JasperViewer.viewReport(print, false);
+            }
+
+            return print;
+
+        } catch (Exception e) {
+            System.err.println("[ReportService] Error loading report: " + jrxmlPath);
+            e.printStackTrace();
+            throw new JRException("Failed to load report: " + e.getMessage(), e);
         }
-
-        return print;
     }
 
     private boolean saveReportAsPDF(String jrxml, Connection conn, int userId) throws JRException {

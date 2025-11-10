@@ -6,8 +6,8 @@
 	<query language="SQL"><![CDATA[SELECT
     c.name AS category,
     SUM(e.amount) AS total_spent
-FROM expense_central e
-JOIN category_central c
+FROM system.expense_central e
+JOIN system.category_central c
   ON e.category_id = c.category_id
 WHERE e.delete_flag = 0
   AND c.delete_flag = 0
