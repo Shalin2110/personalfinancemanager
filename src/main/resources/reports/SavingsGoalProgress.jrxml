@@ -2,6 +2,7 @@
 <jasperReport name="SavingsGoalProgress" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8c717684-6768-4603-b86d-657bdc7bc7b7">
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Oracle_Central"/>
+	<parameter name="USER_ID" class="java.lang.Integer"/>
 	<query language="SQL"><![CDATA[SELECT
     name                                        AS goalname,
     target_amount                               AS targetamount,
@@ -13,6 +14,7 @@ FROM
     savings_goal_central
 WHERE
     delete_flag = 0
+    AND user_id = $P{USER_ID}
     AND target_date >= TRUNC(SYSDATE)
 ORDER BY
     progresspercent DESC

@@ -10,29 +10,57 @@ import java.util.TimerTask;
 public class AutoSyncWorker {
 
     private static final SyncLogDao dao = new SyncLogDao();
+    private static Timer timer;
 
     public static void start() {
-        Timer timer = new Timer(true); // runs in background
+        if (timer != null) {
+            timer.cancel(); // Cancel existing timer if any
+        }
+
+        timer = new Timer(true); // runs in background
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 if (ConnectivityChecker.isOracleOnline()) {
-                    retryFailedSync();
+                    retryFailedAndPendingSync();
                 }
             }
         }, 0, 10_000); // check every 10 seconds
     }
 
-    private static void retryFailedSync() {
+    public static void stop() {
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
+    }
+
+    private static void retryFailedAndPendingSync() {
         try {
-            List<SyncLog> pending = dao.getFailedLogs();
-            for (SyncLog log : pending) {
-                dao.resyncRecord(log);
+            // Get both FAILED and PENDING logs
+            List<SyncLog> pending = dao.getFailedAndPendingLogs();
+            if (!pending.isEmpty()) {
+                System.out.println("[AutoSyncWorker] Found " + pending.size() + " pending/failed syncs");
             }
-        } catch (Exception ignored) {}
+
+            for (SyncLog log : pending) {
+                boolean success = dao.attemptResyncRecord(log);
+                if (success) {
+                    System.out.println("[AutoSyncWorker] ✅ Successfully synced: " + log.getDeviceTxnId());
+                } else {
+                    System.out.println("[AutoSyncWorker] ❌ Failed to sync: " + log.getDeviceTxnId());
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("[AutoSyncWorker] Error during sync: " + e.getMessage());
+        }
     }
 
     public static void forceRetryNow() {
-        retryFailedSync();
+        if (ConnectivityChecker.isOracleOnline()) {
+            retryFailedAndPendingSync();
+        } else {
+            System.out.println("[AutoSyncWorker] Oracle is offline - cannot sync");
+        }
     }
 }

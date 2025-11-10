@@ -30,7 +30,13 @@ public class SavingsGoalDao {
 
             try (ResultSet rs = ps.getGeneratedKeys()) {
                 if (rs.next()) {
-                    g.setGoalId(rs.getInt(1));
+                    int goalId = rs.getInt(1);
+                    g.setGoalId(goalId);
+
+                    // UPDATE: Use the actual goal_id as device_txn_id instead of UUID
+                    String newTxnId = String.valueOf(goalId);
+                    SyncManager.updateDeviceTxnId(txnId, newTxnId, "savings_goal");
+                    txnId = newTxnId; // Update local reference
                 }
             }
 
@@ -44,7 +50,10 @@ public class SavingsGoalDao {
 
     // Update + log
     public void updateGoal(SavingsGoal g) throws SQLException {
-        String txnId = SyncManager.startSync("savings_goal", null);
+        // Use the goal_id as device_txn_id for updates
+        String txnId = String.valueOf(g.getGoalId());
+        SyncManager.startSync("savings_goal", txnId);
+
         String sql = "UPDATE savings_goal SET name=?, target_amount=?, current_amount=?, start_date=?, target_date=? , status=? WHERE goal_id=?";
         try (Connection conn = SQLiteConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -68,7 +77,10 @@ public class SavingsGoalDao {
 
     // Soft delete + log
     public void deleteGoal(int id) throws SQLException {
-        String txnId = SyncManager.startSync("savings_goal", null);
+        // Use the goal_id as device_txn_id for deletes
+        String txnId = String.valueOf(id);
+        SyncManager.startSync("savings_goal", txnId);
+
         String sql = "UPDATE savings_goal SET delete_flag=1 WHERE goal_id=?";
         try (Connection conn = SQLiteConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -86,7 +98,7 @@ public class SavingsGoalDao {
         }
     }
 
-    // Fetch all goals (for all users - ADMIN only)
+    // Fetch all goals (for all users - ADMIN only) - KEEP AS IS
     public List<SavingsGoal> getAllGoals() throws SQLException {
         List<SavingsGoal> list = new ArrayList<>();
         String sql = "SELECT * FROM savings_goal WHERE delete_flag = 0 ORDER BY goal_id DESC";
@@ -111,7 +123,7 @@ public class SavingsGoalDao {
         return list;
     }
 
-    // Fetch goals for specific user
+    // Fetch goals for specific user - KEEP AS IS
     public List<SavingsGoal> getGoalsByUser(int userId) throws SQLException {
         List<SavingsGoal> list = new ArrayList<>();
         String sql = "SELECT * FROM savings_goal WHERE user_id = ? AND delete_flag = 0 ORDER BY goal_id DESC";
@@ -137,9 +149,9 @@ public class SavingsGoalDao {
         return list;
     }
 
-    // Oracle Sync
+    // Oracle Sync - KEEP AS IS
     private void syncToOracle(SavingsGoal g) throws SQLException {
-        String sql = "{ call proc_sync_savings_goal(?, ?, ?, ?, ?, ?, ?, ?, ?) }";
+        String sql = "{ call system.proc_sync_savings_goal(?, ?, ?, ?, ?, ?, ?, ?, ?) }";
 
         try (Connection conn = OracleConnection.getConnection();
              CallableStatement cs = conn.prepareCall(sql)) {

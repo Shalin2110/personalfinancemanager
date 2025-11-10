@@ -1,8 +1,11 @@
 package com.example.service;
 
 import com.example.dao.SyncLogDao;
+import com.example.db.SQLiteConnection;
 import com.example.model.SyncLog;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -53,6 +56,20 @@ public class SyncLogService {
         } catch (SQLException e) {
             System.err.println("[SyncLogService] Error reading sync logs: " + e.getMessage());
             return List.of();
+        }
+    }// Add this method to your SyncLogService class
+    public void updateDeviceTxnId(String oldTxnId, String newTxnId) {
+        String sql = "UPDATE sync_log SET device_txn_id = ? WHERE device_txn_id = ?";
+
+        try (Connection conn = SQLiteConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, newTxnId);
+            ps.setString(2, oldTxnId);
+            ps.executeUpdate();
+
+        } catch (SQLException e) {
+            System.err.println("[SyncLogService] Error updating device_txn_id: " + e.getMessage());
         }
     }
 }

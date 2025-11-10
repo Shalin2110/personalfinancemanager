@@ -2,6 +2,8 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.paint.Color?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.controller.DashboardController">
 
@@ -12,11 +14,16 @@
                 <Label text="💰 Personal Finance Manager" style="-fx-text-fill: white; -fx-font-size: 24; -fx-font-weight: bold;" />
                 <Pane HBox.hgrow="ALWAYS"/>
                 <VBox alignment="CENTER_RIGHT" spacing="2">
-                    <Label text="Connection Status" style="-fx-text-fill: #E3F2FD; -fx-font-size: 12;"/>
-                    <Label fx:id="lblConnectionStatus" text="Checking..." style="-fx-text-fill: white; -fx-font-size: 14; -fx-font-weight: bold;"/>
+                    <Label text="Connection" style="-fx-text-fill: #E3F2FD; -fx-font-size: 12;"/>
+                    <HBox spacing="5" alignment="CENTER_RIGHT">
+                        <Label fx:id="lblConnectionStatus" text="Checking..."
+                               style="-fx-text-fill: white; -fx-font-size: 14; -fx-font-weight: bold;"/>
+                        <!-- Visual indicator -->
+                        <Circle fx:id="connectionIndicator" radius="5" fill="gray"/>
+                    </HBox>
                 </VBox>
                 <Button text="🚪 Logout" onAction="#handleLogout"
-                        style="-fx-background-color: #E53935; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 5 10;"/>
+                        style="-fx-background-color: #E53935; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 8 15;"/>
             </HBox>
         </VBox>
     </top>
@@ -46,6 +53,8 @@
                 <Button text="🏦 Accounts" fx:id="btnAccounts" onAction="#openAccounts"
                         style="-fx-background-color: transparent; -fx-text-fill: #ECF0F1; -fx-font-size: 13; -fx-font-weight: bold; -fx-padding: 10 12; -fx-background-radius: 6; -fx-alignment: center-left; -fx-max-width: Infinity;"/>
                 <Button text="📂 Categories" fx:id="btnCategories" onAction="#openCategories"
+                        style="-fx-background-color: transparent; -fx-text-fill: #ECF0F1; -fx-font-size: 13; -fx-font-weight: bold; -fx-padding: 10 12; -fx-background-radius: 6; -fx-alignment: center-left; -fx-max-width: Infinity;"/>
+                <Button text="🔒 Security and Backup" fx:id="btnBackup" onAction="#openBackup"
                         style="-fx-background-color: transparent; -fx-text-fill: #ECF0F1; -fx-font-size: 13; -fx-font-weight: bold; -fx-padding: 10 12; -fx-background-radius: 6; -fx-alignment: center-left; -fx-max-width: Infinity;"/>
 
                 <Separator style="-fx-padding: 5 0 5 0;">

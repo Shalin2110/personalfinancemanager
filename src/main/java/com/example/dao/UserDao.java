@@ -4,7 +4,7 @@ import com.example.model.User;
 import com.example.db.SQLiteConnection;
 import com.example.db.OracleConnection;
 import com.example.db.SyncManager;
-
+import com.example.util.CryptoUtil;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,29 +18,41 @@ public class UserDao {
             throw new SQLException("Username already exists");
         }
 
+        String txnId = SyncManager.startSync("user", null);
+
         String sql = "INSERT INTO user (username, password_hash, email, delete_flag) VALUES (?, ?, ?, 0)";
         try (Connection conn = SQLiteConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             ps.setString(1, user.getUsername());
             ps.setString(2, user.getPasswordHash());
-            ps.setString(3, user.getEmail());
+            ps.setString(3, CryptoUtil.encrypt(user.getEmail()));
             ps.executeUpdate();
 
             // Retrieve new ID
             try (ResultSet rs = ps.getGeneratedKeys()) {
                 if (rs.next()) {
-                    user.setUserId(rs.getInt(1));
+                    int userId = rs.getInt(1);
+                    user.setUserId(userId);
+
+                    // UPDATE: Use the actual user_id as device_txn_id instead of UUID
+                    String newTxnId = String.valueOf(userId);
+                    SyncManager.updateDeviceTxnId(txnId, newTxnId, "user");
+                    txnId = newTxnId; // Update local reference
                 }
             }
 
             // Sync to Oracle
             syncToOracle(user);
+            SyncManager.markSuccess(txnId);
             return true;
+        } catch (Exception e) {
+            SyncManager.markFailure(txnId, e.getMessage());
+            throw new SQLException("Register user failed: " + e.getMessage());
         }
     }
 
-    // Authenticate user (try SQLite first, then Oracle)
+    // Authenticate user (try SQLite first, then Oracle) - KEEP AS IS
     public User authenticateUser(String username, String passwordHash) throws SQLException {
         // Try SQLite first
         User user = authenticateInSQLite(username, passwordHash);
@@ -52,7 +64,7 @@ public class UserDao {
         return authenticateInOracle(username, passwordHash);
     }
 
-    // SQLite authentication
+    // SQLite authentication - KEEP AS IS
     private User authenticateInSQLite(String username, String passwordHash) throws SQLException {
         String sql = "SELECT * FROM user WHERE username = ? AND password_hash = ? AND delete_flag = 0";
 
@@ -70,7 +82,7 @@ public class UserDao {
         return null;
     }
 
-    // Oracle authentication
+    // Oracle authentication - KEEP AS IS
     private User authenticateInOracle(String username, String passwordHash) throws SQLException {
         String sql = "SELECT * FROM user_central WHERE username = ? AND password_hash = ? AND delete_flag = 0";
 
@@ -93,7 +105,7 @@ public class UserDao {
         return null;
     }
 
-    // Check if username exists in SQLite
+    // Check if username exists in SQLite - KEEP AS IS
     private boolean usernameExists(String username) throws SQLException {
         String sql = "SELECT COUNT(*) FROM user WHERE username = ? AND delete_flag = 0";
 
@@ -106,12 +118,12 @@ public class UserDao {
         }
     }
 
-    // Check if username exists in SQLite
+    // Check if username exists in SQLite - KEEP AS IS
     private boolean usernameExistsInSQLite(String username) throws SQLException {
         return usernameExists(username);
     }
 
-    // Sync user from Oracle to SQLite
+    // Sync user from Oracle to SQLite - KEEP AS IS
     private void syncFromOracle(User user) throws SQLException {
         String sql = "INSERT INTO user (user_id, username, password_hash, email, created_at, delete_flag) VALUES (?, ?, ?, ?, ?, ?)";
 
@@ -121,16 +133,16 @@ public class UserDao {
             ps.setInt(1, user.getUserId());
             ps.setString(2, user.getUsername());
             ps.setString(3, user.getPasswordHash());
-            ps.setString(4, user.getEmail());
+            ps.setString(4, CryptoUtil.encrypt(user.getEmail()));
             ps.setTimestamp(5, user.getCreatedAt());
             ps.setInt(6, user.isDeleteFlag() ? 1 : 0);
             ps.executeUpdate();
         }
     }
 
-    // Oracle Sync Logic
+    // Oracle Sync Logic - KEEP AS IS
     private void syncToOracle(User user) throws SQLException {
-        String sql = "{ call proc_sync_user(?, ?, ?, ?, ?, ?) }";
+        String sql = "{ call system.proc_sync_user(?, ?, ?, ?, ?, ?) }";
 
         try (Connection conn = OracleConnection.getConnection();
              CallableStatement cs = conn.prepareCall(sql)) {
@@ -138,7 +150,7 @@ public class UserDao {
             cs.setInt(1, user.getUserId());
             cs.setString(2, user.getUsername());
             cs.setString(3, user.getPasswordHash());
-            cs.setString(4, user.getEmail());
+            cs.setString(4, CryptoUtil.encrypt(user.getEmail()));
             cs.setTimestamp(5, user.getCreatedAt());
             cs.setInt(6, user.isDeleteFlag() ? 1 : 0);
 
@@ -149,13 +161,13 @@ public class UserDao {
         }
     }
 
-    // Helper method to map ResultSet to User
+    // Helper method to map ResultSet to User - KEEP AS IS
     private User mapResultSetToUser(ResultSet rs) throws SQLException {
         User user = new User();
         user.setUserId(rs.getInt("user_id"));
         user.setUsername(rs.getString("username"));
         user.setPasswordHash(rs.getString("password_hash"));
-        user.setEmail(rs.getString("email"));
+        user.setEmail(CryptoUtil.decrypt(rs.getString("email")));
         user.setCreatedAt(rs.getTimestamp("created_at"));
         user.setDeleteFlag(rs.getBoolean("delete_flag"));
         return user;

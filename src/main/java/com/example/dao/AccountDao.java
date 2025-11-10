@@ -28,7 +28,13 @@ public class AccountDao {
             // Retrieve new ID
             try (ResultSet rs = ps.getGeneratedKeys()) {
                 if (rs.next()) {
-                    account.setAccountId(rs.getInt(1));
+                    int accountId = rs.getInt(1);
+                    account.setAccountId(accountId);
+
+                    // UPDATE: Use the actual account_id as device_txn_id instead of UUID
+                    String newTxnId = String.valueOf(accountId);
+                    SyncManager.updateDeviceTxnId(txnId, newTxnId, "account");
+                    txnId = newTxnId; // Update local reference
                 }
             }
 
@@ -90,7 +96,10 @@ public class AccountDao {
 
     // Update + auto sync + log
     public void updateAccount(Account account) throws SQLException {
-        String txnId = SyncManager.startSync("account", null);
+        // Use the account_id as device_txn_id for updates
+        String txnId = String.valueOf(account.getAccountId());
+        SyncManager.startSync("account", txnId);
+
         String sql = "UPDATE account SET name=?, currency=?, opening_balance=? WHERE account_id=?";
 
         try (Connection conn = SQLiteConnection.getConnection();
@@ -112,7 +121,10 @@ public class AccountDao {
 
     // Soft Delete + auto sync + log
     public void deleteAccount(int id) throws SQLException {
-        String txnId = SyncManager.startSync("account", null);
+        // Use the account_id as device_txn_id for deletes
+        String txnId = String.valueOf(id);
+        SyncManager.startSync("account", txnId);
+
         String sql = "UPDATE account SET delete_flag = 1 WHERE account_id = ?";
 
         try (Connection conn = SQLiteConnection.getConnection();
@@ -133,7 +145,7 @@ public class AccountDao {
 
     // Oracle Sync Logic
     private void syncToOracle(Account account) throws SQLException {
-        String sql = "{ call proc_sync_account(?, ?, ?, ?, ?, ?) }";
+        String sql = "{ call system.proc_sync_account(?, ?, ?, ?, ?, ?) }";
 
         try (Connection conn = OracleConnection.getConnection();
              CallableStatement cs = conn.prepareCall(sql)) {

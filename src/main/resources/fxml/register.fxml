@@ -24,7 +24,7 @@
             </VBox>
 
             <VBox spacing="5">
-                <Label text="Email (Optional)" style="-fx-font-weight: bold; -fx-text-fill: #34495E;"/>
+                <Label text="Email" style="-fx-font-weight: bold; -fx-text-fill: #34495E;"/>
                 <TextField fx:id="txtEmail" style="-fx-background-radius: 6; -fx-padding: 8;" promptText="Enter your email"/>
             </VBox>
 

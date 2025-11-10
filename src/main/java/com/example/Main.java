@@ -7,6 +7,7 @@ import com.example.sync.AutoSyncWorker;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -22,12 +23,25 @@ public class Main extends Application {
         AutoSyncWorker.start();
         testDatabaseConnections();
 
+        // Configure stage for better window management
+        configureStage();
+
         // Start with login screen instead of dashboard
         showLogin();
     }
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    // Configure stage properties for better window management
+    private void configureStage() {
+        primaryStage.setMaximized(true); // Start maximized
+        primaryStage.centerOnScreen();   // Center on screen
+
+        // Optional: Set minimum size
+        primaryStage.setMinWidth(1000);
+        primaryStage.setMinHeight(700);
     }
 
     // Test database connections on startup
@@ -53,6 +67,10 @@ public class Main extends Application {
             Scene scene = new Scene(fxmlLoader.load(), 800, 600);
             primaryStage.setTitle("Personal Finance Manager - Login");
             primaryStage.setScene(scene);
+
+            // Center login window (smaller than fullscreen)
+            primaryStage.setMaximized(false);
+            primaryStage.centerOnScreen();
             primaryStage.show();
         } catch (IOException e) {
             System.err.println("Error loading login screen: " + e.getMessage());
@@ -67,6 +85,10 @@ public class Main extends Application {
             Scene scene = new Scene(fxmlLoader.load(), 800, 600);
             primaryStage.setTitle("Personal Finance Manager - Register");
             primaryStage.setScene(scene);
+
+            // Center register window
+            primaryStage.setMaximized(false);
+            primaryStage.centerOnScreen();
             primaryStage.show();
         } catch (IOException e) {
             System.err.println("Error loading register screen: " + e.getMessage());
@@ -80,6 +102,10 @@ public class Main extends Application {
             Scene scene = new Scene(fxmlLoader.load(), 1200, 800);
             primaryStage.setTitle("Personal Finance Manager");
             primaryStage.setScene(scene);
+
+            // Dashboard opens maximized and centered
+            primaryStage.setMaximized(true);
+            primaryStage.centerOnScreen();
             primaryStage.show();
         } catch (IOException e) {
             System.err.println("Error loading dashboard: " + e.getMessage());
@@ -91,5 +117,14 @@ public class Main extends Application {
     public static void handleLogout() {
         com.example.service.UserService.logoutUser();
         showLogin();
+    }
+
+    // Override stop method to clean up resources
+    @Override
+    public void stop() throws Exception {
+        // Stop background services
+        AutoSyncWorker.stop();
+        super.stop();
+        System.out.println("Application shutting down...");
     }
 }

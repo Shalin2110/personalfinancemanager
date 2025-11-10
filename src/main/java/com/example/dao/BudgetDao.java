@@ -30,7 +30,13 @@ public class BudgetDao {
             // Retrieve new ID
             try (ResultSet rs = ps.getGeneratedKeys()) {
                 if (rs.next()) {
-                    budget.setBudgetId(rs.getInt(1));
+                    int budgetId = rs.getInt(1);
+                    budget.setBudgetId(budgetId);
+
+                    // UPDATE: Use the actual budget_id as device_txn_id instead of UUID
+                    String newTxnId = String.valueOf(budgetId);
+                    SyncManager.updateDeviceTxnId(txnId, newTxnId, "budget");
+                    txnId = newTxnId; // Update local reference
                 }
             }
 
@@ -114,7 +120,10 @@ public class BudgetDao {
 
     // Update + auto sync + log
     public void updateBudget(Budget budget) throws SQLException {
-        String txnId = SyncManager.startSync("budget", null);
+        // Use the budget_id as device_txn_id for updates
+        String txnId = String.valueOf(budget.getBudgetId());
+        SyncManager.startSync("budget", txnId);
+
         String sql = "UPDATE budget SET category_id=?, amount=?, start_date=?, end_date=? WHERE budget_id=?";
         try (Connection conn = SQLiteConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -136,7 +145,10 @@ public class BudgetDao {
 
     // Soft Delete + auto sync + log
     public void deleteBudget(int id) throws SQLException {
-        String txnId = SyncManager.startSync("budget", null);
+        // Use the budget_id as device_txn_id for deletes
+        String txnId = String.valueOf(id);
+        SyncManager.startSync("budget", txnId);
+
         String sql = "UPDATE budget SET delete_flag = 1 WHERE budget_id = ?";
         try (Connection conn = SQLiteConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -157,7 +169,7 @@ public class BudgetDao {
     // Oracle Sync Logic
     private void syncToOracle(Budget budget) throws SQLException {
         // Use stored procedure for insert/update
-        String sql = "{ call proc_sync_budget(?, ?, ?, ?, ?, ?, ?) }";
+        String sql = "{ call system.proc_sync_budget(?, ?, ?, ?, ?, ?, ?) }";
         try (Connection conn = OracleConnection.getConnection();
              CallableStatement cs = conn.prepareCall(sql)) {
 

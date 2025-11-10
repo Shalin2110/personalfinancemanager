@@ -27,7 +27,15 @@ public class CategoryDao {
             ps.executeUpdate();
 
             ResultSet rs = ps.getGeneratedKeys();
-            if (rs.next()) category.setCategoryId(rs.getInt(1));
+            if (rs.next()) {
+                int categoryId = rs.getInt(1);
+                category.setCategoryId(categoryId);
+
+                // UPDATE: Use the actual category_id as device_txn_id instead of UUID
+                String newTxnId = String.valueOf(categoryId);
+                SyncManager.updateDeviceTxnId(txnId, newTxnId, "category");
+                txnId = newTxnId; // Update local reference
+            }
 
             syncToOracle(category);
             SyncManager.markSuccess(txnId);
@@ -92,7 +100,10 @@ public class CategoryDao {
 
     // Update
     public void updateCategory(Category category) throws SQLException {
-        String txnId = SyncManager.startSync("category", null);
+        // Use the category_id as device_txn_id for updates
+        String txnId = String.valueOf(category.getCategoryId());
+        SyncManager.startSync("category", txnId);
+
         String sql = "UPDATE category SET name=?, type=?, parent_category_id=? WHERE category_id=?";
         try (Connection conn = SQLiteConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -116,7 +127,10 @@ public class CategoryDao {
 
     // Soft delete
     public void deleteCategory(int id) throws SQLException {
-        String txnId = SyncManager.startSync("category", null);
+        // Use the category_id as device_txn_id for deletes
+        String txnId = String.valueOf(id);
+        SyncManager.startSync("category", txnId);
+
         String sql = "UPDATE category SET delete_flag=1 WHERE category_id=?";
         try (Connection conn = SQLiteConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -170,7 +184,7 @@ public class CategoryDao {
 
     // Sync logic for Oracle - Updated to use stored procedure
     public void syncToOracle(Category category) throws SQLException {
-        String sql = "{ call proc_sync_category(?, ?, ?, ?, ?, ?) }";
+        String sql = "{ call system.proc_sync_category(?, ?, ?, ?, ?, ?) }";
 
         try (Connection conn = OracleConnection.getConnection();
              CallableStatement cs = conn.prepareCall(sql)) {

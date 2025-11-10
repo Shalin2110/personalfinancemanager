@@ -1,5 +1,6 @@
 com\example\db\SQLiteConnection.class
 com\example\Main.class
+com\example\controller\BackupController.class
 com\example\service\AccountService.class
 com\example\sync\AutoSyncWorker$1.class
 com\example\dao\AccountDao.class
@@ -8,9 +9,11 @@ com\example\controller\BudgetController$1.class
 com\example\db\OracleConnection.class
 com\example\controller\BudgetController.class
 com\example\model\Expense.class
+com\example\service\SyncHelper.class
 com\example\controller\RegisterController.class
 com\example\service\ExpenseService.class
 com\example\controller\AccountController$1.class
+com\example\util\BackupManager.class
 com\example\db\SyncManager.class
 com\example\db\DBConfig.class
 com\example\model\SavingsGoal.class
@@ -30,12 +33,14 @@ com\example\controller\ReportController$ReportAction.class
 com\example\controller\LoginController.class
 com\example\controller\CategoryController.class
 com\example\controller\ExpenseController$1.class
+com\example\util\CryptoUtil.class
 com\example\service\BudgetService.class
 com\example\dao\SyncLogDao.class
 com\example\service\SavingsGoalService.class
 com\example\dao\BudgetDao.class
 com\example\sync\ConnectivityChecker.class
 com\example\dao\SavingsGoalDao.class
+com\example\sync\ConnectionMonitor.class
 com\example\model\SyncLog.class
 com\example\model\User.class
 com\example\controller\CategoryController$1.class
